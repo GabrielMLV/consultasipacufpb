@@ -38,7 +38,7 @@
 										<option value="0" selected disabled>Selecione o auxílio.</option>
 										<option value="auxilio_moradia">Moradia</option>
 										<option value="auxilio_alimentacao">Alimentação</option>
-										<option value="auxilio_alimentacao_res">Alimentação residência</option>
+										<option value="auxilio_alimentacao_residencia">Alimentação residência</option>
 										<option value="auxilio_emergencial">Auxílio emergencial COVID-19</option>
 									</select>
 								</div>
@@ -89,8 +89,11 @@
 			<div style="margin-top: 15px;" id="renderHtmlProcess">
 
 			</div>
-			
-
+						
+			<!-- <button class="uk-icon-button loginGoogle" uk-icon="google-plus"></button> -->
+			<div id="commentsList">
+				<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+			</div>
 
 			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
 				<div style="margin-top: 25px;">
@@ -136,10 +139,19 @@
 	</footer>
 </body>
 
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
 <script src="js/jquery-3.5.1.min.js"></script>
 <script src="js/moment-with-locales.js"></script>
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/firebase_conf.js"></script>
+
 
 </html>

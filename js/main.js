@@ -1,8 +1,48 @@
+var obj_default = [
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRAPE - COORDENAÇÃO DE ASSISTÊNCIA E PROMOÇÃO ESTUDANTIS (COAPE) (11.00.63.01)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRÓ-REITORIA DE ADMINISTRAÇÃO (PRA) (11.00.47)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - COORDENAÇÃO DE ADMINISTRAÇÃO (11.01.08.02)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - ASSESSORIA DE COORDENAÇÃO DE ADMINISTRAÇÃO (11.01.08.96)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRÓ-REITORIA DE ADMINISTRAÇÃO (PRA) (11.00.47)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - COORDENAÇÃO DE CONTABILIDADE E FINANÇAS (11.01.08.01)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - SEÇÃO ANÁLISE E CONTROLE (11.01.08.01.03.03)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - DIVISÃO DE CONTABILIDADE (11.01.08.01.03)",
+    },
+    {
+        "status_terminado": false,
+        "unidade_destino": "PRA - DIVISÃO DE ADMINISTRAÇÃO E FINANÇAS (11.01.08.01.02)",
+    },
+    {
+        "status_terminado": true,
+        "unidade_destino": "PRA - ARQUIVO DA DAF (11.01.08.01.02.02)",
+    }
+]
 window.onload = function () {
-    moment.locale('pt-br'); 
-     
-    //getFunction(urlPerStatePb, renderState, errorGet);
-    //getFunction(urlPerCityJp, renderCity, errorGet);
+    moment.locale('pt-br');  
+    console.log(obj_default);
 }
 
 $(document).on("click", ".send", function(e){
@@ -76,49 +116,110 @@ function updateProgress(evt) {
 }
 
 function renderProcess(res) {
-    console.log(res);
     var resPars = JSON.parse(res);
     var dt = resPars.data;
-    console.log(dt);
-    console.log(dt.length);
     document.getElementById("renderHtmlProcess").innerHTML = "";
-    var date_hour_now = 'Última pesquisa em: <span class="uk-badge" id="rendBadgHour">'+moment().format('L') +' - '+ moment().format('LTS')+'</span>';
+    var date_hour_now = 'Última pesquisa em: <span id="rendBadgHour">'+moment().format('L') +' - '+ moment().format('LTS')+'</span>';
     document.getElementById("lastSearch").innerHTML = date_hour_now;
-    if (dt.length == 0) {
+    if (dt == "" || typeof dt == "undefined" || dt == null) {
         document.getElementById("renderHtmlProcess").innerHTML = "<span style='text-align:center'><h3>Oops!</h3> Nenhum processo encontrado no momento.</span>";
         errorGetProcess("Nenhum processo encontrado no momento.");
     } else {       
         var html = "";
         html += '<article style="margin-top: 20px;" class="page">';
-        html += '<h2>Resultados - Atualizado em ' + moment(dt[0].atualizado_em).format('LLL') + '</h2>';
+        html += '<h2>Resultado, atualizado em ' + moment(dt.atualizado_em).format('LLL') + '</h2>';
         html += '<ul class="timeline">';
-        for(var i = 0; i < dt.length; i++){           			
-            if(i == 0){
-                html += '<li class="timeline-milestone is-completed timeline-start">';              
+       // for(var i = 0; i < dt.length; i++){ 
+           var status = "";
+           console.log(dt);          			
+            if(dt.status_terminado == true){
+                status = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
+                html += '<li class="timeline-milestone is-completed timeline-start">'; 
+                var title = dt.tipo_auxilio.split("_").join(' ');
+                html += '<div class="timeline-action">';
+                html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
+                html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
+                html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
+                html += '<div class="content">';
+                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
+                html += '</div>';
+                html += '<div class="content">';
+                html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
+                html += '</div>';
+                html += '</div>';
+                html += '</li>';     
+            }else{
+                status = "<span style='color:#f0506e'>EM ANDAMENTO</span>"
+                html += '<li class="timeline-milestone is-completed timeline-start">'; 
+                var title = dt.tipo_auxilio.split("_").join(' ');
+                html += '<div class="timeline-action">';
+                html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
+                html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
+                html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
+                html += '<div class="content">';
+                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
+                html += '</div>';
+                html += '<div class="content">';
+                html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
+                html += '</div>';
+                html += '</div>';
+                html += '</li>'; 
+
+                for(var i = 0; i < obj_default.length; i++){
+                    if(obj_default[i].unidade_destino == dt.unidade_destino){
+                        for(var x = i+1; x < obj_default.length; x++){
+                            var stats = "";
+                            if(x == obj_default.length){
+                                stats = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
+                                html += '<li class="timeline-milestone is-future timeline-end">'; 
+                            }else{
+                                stats = "<span style='color:orange'><strong>AGUARDANDO</strong></span>";   
+                                html += '<li class="timeline-milestone is-future">'; 
+                            }
+
+                            html += '<div class="timeline-action">';
+                            html += '<h2 class="title"><b>' + title + '</b></span></h2>';
+                            html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
+                            html += '<span class="date"><b>Status:</b> ' + stats  + '</span>';
+                            html += '<div class="content">';
+                            html += '<b>Unidade de destino:</b> '+obj_default[x].unidade_destino.toUpperCase();  
+                            html += '</div>';
+                            html += '<div class="content">';
+                            html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</li>'; 
+                        }
+                    }
+                }
             }
-             if(i > 0 && i < dt.length){
+           /*  if(i > 0 && i < dt.length){
                 html += '<li class="timeline-milestone is-current">';
             }
-             if(i == dt.length){
+            if(i == dt.length){
                 html += '<li class="timeline-milestone timeline-end">';
-            }
+            } */
             //body
-            var title = dt[i].tipo_auxilio.replace("_", " ");          
-            html += '<div class="timeline-action">';
-            html += '<h2 class="title"><b>Tipo:</b> ' + title.charAt(0).toUpperCase() + title.slice(1) + ' - <b>Campus:</b> '+ dt[i].campus +'</b></span></h2>';
-            html += '<span class="date"><b>Data de origem:</b> ' + dt[i].data_origem+ ' - <b>Recebido em:</b> '+ dt[i].recebido_em +'</span>';
-            html += '<div class="content">';
-            html += '<b>Unidade de origem:</b> ' + dt[i].unidade_origem;
-            html += '<hr style="margin-top: 3px; margin-bottom:3px;">';
-            html += '<b>Unidade de destino:</b> '+dt[i].unidade_destino;  
-            html += '</div>';
-            html += '</div>';
-            html += '</li>';   
+
+            
+         /*    for(var x = 0; x < obj_default.length; x++){
+                var title2 = obj_default[pos_default+1].unidade_destino;          
+                html += '<div class="timeline-action">';
+                html += '<h2 class="title"><b>Tipo:</b> ' + title2 + ' - <b>Campus:</b> '+  +'</b></span></h2>';
+                html += '<span class="date"><b>Data de origem:</b> ' + dt.data_origem+ ' - <b>Recebido em:</b> '+ dt.recebido_em +'</span>';
+                html += '<div class="content">';
+                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
+                html += '<hr style="margin-top: 3px; margin-bottom:3px;">';
+                html += '<b>Status:</b> '+dt.status == true ? "Terminado": "Em andamento";  
+                html += '</div>';
+                html += '</div>';
+                html += '</li>';
+            } */
                      			                 																									  									  
-        }
+        //}
         html += '</ul>';
         html += '</article> '; 
-
+        //is-future
         document.getElementById("renderHtmlProcess").innerHTML = html; 
     }
 
