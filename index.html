@@ -23,8 +23,8 @@
 			</div>
 		</nav>
 		-->
-		<div class="uk-container uk-container-large">
-			<h1 class="uk-heading-line" style="color: #5f338a;"><span>Consulta SIPAC</span></h1>
+		<div class="uk-container uk-container-large" id="idTopHome">
+			<h1 class="uk-heading-bullet" style="color: #5f338a;">Consulta SIPAC</h1>
 			<div class="uk-grid-medium uk-child-width-1-1" uk-grid>
 				<div>
 					<div style="border-radius: 10px;"
@@ -40,6 +40,10 @@
 										<option value="auxilio_alimentacao">Alimentação</option>
 										<option value="auxilio_alimentacao_residencia">Alimentação residência</option>
 										<option value="auxilio_emergencial">Auxílio emergencial COVID-19</option>
+										<option value="auxilio_residencia_rumf">Residência RUMF</option>
+										<option value="auxilio_residencia_rufet">Residência RUFET</option>
+										<option value="auxilio_residentes">Residencia Mangabeira e Santa Rita</option>
+
 									</select>
 								</div>
 							</div>							
@@ -61,8 +65,8 @@
 						</button>
 						
 						<div class="uk-card-footer uk-text-center">
-							<a href="#modal-sections" class="uk-button uk-button-text" uk-toggle>Saiba mais</a>
-							<br>
+							<a href="#renderHtmlProcess" id="goToDown" style="display: none;" uk-scroll></a>
+							<a style="display: none;" href="#modal-sections" class="uk-button uk-button-text" uk-toggle>Saiba mais</a>
 							<div id="lastSearch">
 							</div>							
 						</div>
@@ -86,16 +90,16 @@
 			</div>
 
 			<!--Fim do Card-->
-			<div style="margin-top: 15px;" id="renderHtmlProcess">
+			<div style="margin-top: 25px;" id="renderHtmlProcess" uk-scrollspy="cls: uk-animation-fade; target: .timeline-milestone; delay: 100; repeat: false">
 
 			</div>
 						
 			<!-- <button class="uk-icon-button loginGoogle" uk-icon="google-plus"></button> -->
-			<div id="commentsList">
+			<div id="commentsList" style="display: none;">
 				<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
 			</div>
 
-			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid uk-height-match="target: > div > .uk-card">
 				<div style="margin-top: 25px;">
 					<div style="border-radius: 10px;" class="uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin"
 						uk-grid>
@@ -104,26 +108,24 @@
 							<canvas width="200" height="150"></canvas>
 						</div>
 						<div>
-							<div class="uk-card-body">
+							<div class="uk-card-body uk-text-left@xl">
 								<h3 class="uk-card-title">Agilidade</h3>
-								<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</q>
+								<p style="text-align: justify;">O sistema foi pensado para agilizar a consulta dos processos de auxílios estudantis da UFPB, diminuindo o tempo de pesquisa e facilitando o acesso a qualquer estudante.</p>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div style="margin-top: 25px;">
-					<div style="border-radius: 10px;" class="uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin"
+					<div style="border-radius: 10px;" class=" uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin" 
 						uk-grid>
-						<div class=" uk-card-media-left uk-cover-container">
+						<div class="uk-card-media-left uk-cover-container">
 							<img src="images/process.png" alt="Processos" uk-cover />
 							<canvas width="200" height="150"></canvas>
 						</div>
 						<div>
-							<div class="uk-card-body">
+							<div class="uk-card-body uk-text-left@s">
 								<h3 class="uk-card-title">Entenda os processos</h3>
-								<q>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</q>
+								<p style="text-align: justify;">De segunda a sexta, em horário comercial, é coletado as informações do site do <a target="_blank" href="https://sipac.ufpb.br/public/jsp/portal.jsf"> SIPAC</a>. Essas informações são salvas em nosso banco de dados e estão disponíveis na forma de API Rest, podendo ser consumida por qualquer sistema. Para saber mais, acesse <a target="_blank" href="https://github.com/anaplb3/scrapy-sipac-processos"> aqui</a>.</p>
 							</div>
 						</div>
 					</div>

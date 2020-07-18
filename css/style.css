@@ -11,6 +11,17 @@ footer {
   width: 2000px;
   border-bottom: calc(.2px + .05em) solid #5f338a;
 }
+
+.uk-heading-bullet::before {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: calc(-.1 * 1em);
+  vertical-align: middle;
+  height: calc(4px + .7em);
+  margin-right: calc(5px + .2em);
+  border-left: calc(5px + .1em) solid #5f338a;
+}
 .timeline {
     list-style: none;
     margin: 25px 0 22px;
@@ -59,7 +70,7 @@ footer {
   .timeline-milestone {
     border-left: 2px solid #5f338a;
     margin: 0 0 0 20px;
-    padding: 0 0 5px 25px;
+    padding: 0 0 15px 25px;
     position: relative;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -107,7 +118,7 @@ footer {
   .timeline-milestone.is-future .timeline-action .title {
     color: #9a8bb4;
   }
-  
+
   .timeline-action {
     background-color: #FFF;
     padding: 12px 10px 12px 20px;
@@ -190,3 +201,11 @@ footer {
     margin-right: 8px;
   }
   
+  .classNoFound{
+    text-align:center;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 1px 15px -4px #999;
+    box-shadow: 0px 1px 15px -4px #999;
+  }

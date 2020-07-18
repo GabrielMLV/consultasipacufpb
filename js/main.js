@@ -1,3 +1,4 @@
+var loadSpinn = '<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>';
 var obj_default = [
     {
         "status_terminado": false,
@@ -42,11 +43,16 @@ var obj_default = [
 ]
 window.onload = function () {
     moment.locale('pt-br');  
-    console.log(obj_default);
+    //console.log(obj_default);
+    var a = "Hello World!";
+    function MsgBox(msg){
+        alert(msg+"\n"+a);
+    }
+    MsgBox("OK");
 }
 
 $(document).on("click", ".send", function(e){
-    console.log("Click send");
+    //console.log("Click send");
     var auxilio = document.getElementById("select_auxilio");
     var campus = document.getElementById("select_campus");
 
@@ -64,10 +70,8 @@ $(document).on("click", ".send", function(e){
         },3000)
         UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o campus.', status: 'danger' });
         return;
-    }else{
-        var html = '<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>';
-        document.getElementById("renderHtmlProcess").innerHTML = html;
-
+    }else{     
+        document.getElementById("renderHtmlProcess").innerHTML = loadSpinn;
         //renderProcess(_dt)
         getFunction(auxilio.value, campus.value, renderProcess, errorGetProcess);
     }
@@ -77,7 +81,7 @@ $(document).on("click", ".send", function(e){
 })
 
 function getFunction(auxilio, campus, cbSuccess, cbError) {
-    console.log("Chamou func");
+   // console.log("Chamou func");
     var xmlHttp = new XMLHttpRequest();
     var theUrl = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?auxilio="+auxilio+"&campus="+campus;
 
@@ -110,28 +114,32 @@ function updateProgress(evt) {
         // evt.total the total bytes set by the header
         // jQuery UI progress bar to show the progress on screen
         var percentComplete = (evt.loaded / evt.total) * 100;
-        console.log(percentComplete);
+        //console.log(percentComplete);
         //$('#progressbar').progressbar("option", "value", percentComplete);
     }
 }
 
 function renderProcess(res) {
+    moment.locale('pt-br'); 
     var resPars = JSON.parse(res);
     var dt = resPars.data;
     document.getElementById("renderHtmlProcess").innerHTML = "";
     var date_hour_now = 'Última pesquisa em: <span id="rendBadgHour">'+moment().format('L') +' - '+ moment().format('LTS')+'</span>';
     document.getElementById("lastSearch").innerHTML = date_hour_now;
-    if (dt == "" || typeof dt == "undefined" || dt == null) {
-        document.getElementById("renderHtmlProcess").innerHTML = "<span style='text-align:center'><h3>Oops!</h3> Nenhum processo encontrado no momento.</span>";
-        errorGetProcess("Nenhum processo encontrado no momento.");
-    } else {       
-        var html = "";
+    var html = "";
+    document.getElementById("goToDown").click(); 
+    if (dt == "" || typeof dt == "undefined" || dt == null || dt == "Algo deu errado. 'NoneType' object is not iterable") {
+        var rp = Math.floor((Math.random() * 4) + 1);
+        html += "<div class='classNoFound' style='text-align:center'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
+        //errorGetProcess("Nenhum processo encontrado, tente novamente mais tarde.");
+    } else {                   
         html += '<article style="margin-top: 20px;" class="page">';
-        html += '<h2>Resultado, atualizado em ' + moment(dt.atualizado_em).format('LLL') + '</h2>';
+        html += '<h1 class="uk-heading-bullet" style="color: #5f338a; margin-bottom:10px"><span>Resultado</span></h1>';
+        html += '<h4 style="margin-top:0px;margin-bottom:10px;">Atualizado em '+ moment(dt.atualizado_em).format('LLL') +'</h4>';
         html += '<ul class="timeline">';
        // for(var i = 0; i < dt.length; i++){ 
            var status = "";
-           console.log(dt);          			
+           //console.log(dt);          			
             if(dt.status_terminado == true){
                 status = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
@@ -149,7 +157,7 @@ function renderProcess(res) {
                 html += '</div>';
                 html += '</li>';     
             }else{
-                status = "<span style='color:#f0506e'>EM ANDAMENTO</span>"
+                status = "<span style='color:#1e87f0'><strong>EM ANDAMENTO</strong></span>"
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
                 html += '<div class="timeline-action">';
@@ -164,28 +172,29 @@ function renderProcess(res) {
                 html += '</div>';
                 html += '</div>';
                 html += '</li>'; 
-
+                console.log(dt.unidade_destino);
                 for(var i = 0; i < obj_default.length; i++){
-                    if(obj_default[i].unidade_destino == dt.unidade_destino){
+                    //console.log(obj_default[i].unidade_destino);                   
+                    if(dt.unidade_destino.trim() == obj_default[i].unidade_destino.trim()){
+                        //console.log("Entrou aqui")
                         for(var x = i+1; x < obj_default.length; x++){
                             var stats = "";
                             if(x == obj_default.length){
                                 stats = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
                                 html += '<li class="timeline-milestone is-future timeline-end">'; 
                             }else{
-                                stats = "<span style='color:orange'><strong>AGUARDANDO</strong></span>";   
+                                stats = "<span style='color:#5858588f'><strong>AGUARDANDO</strong></span>";   
                                 html += '<li class="timeline-milestone is-future">'; 
                             }
-
-                            html += '<div class="timeline-action">';
-                            html += '<h2 class="title"><b>' + title + '</b></span></h2>';
+                            html += '<div class="timeline-action" style="background: #f3f3f3ab; -webkit-box-shadow: 0px 0px 0px 0px #fff; box-shadow: 0px 0px 0px 0px #fff;">';
+                            html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                             html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
                             html += '<span class="date"><b>Status:</b> ' + stats  + '</span>';
                             html += '<div class="content">';
-                            html += '<b>Unidade de destino:</b> '+obj_default[x].unidade_destino.toUpperCase();  
+                            html += '<b>Próxima unidade:</b> <span style="color:#4a4a4a">'+obj_default[x].unidade_destino.toUpperCase()+'</span>';  
                             html += '</div>';
                             html += '<div class="content">';
-                            html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
+                           // html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
                             html += '</div>';
                             html += '</div>';
                             html += '</li>'; 
@@ -220,8 +229,9 @@ function renderProcess(res) {
         html += '</ul>';
         html += '</article> '; 
         //is-future
-        document.getElementById("renderHtmlProcess").innerHTML = html; 
+         
     }
+    document.getElementById("renderHtmlProcess").innerHTML = html;
 
 }
 
