@@ -1,22 +1,15 @@
 {
-    "comments":[
+    "visits":[
         {   
-            "token_user" : 1,
-            "name_user": "Gabriel",
-            "image_user": "teste",
-            "comment": "Bom"
+            "date_id" : 1595077331109,
+            "visit": 1,
+            "date_visit": "18/07/2020"
         },
         {
-            "token_user" : 2,
-            "name_user": "Ana",
-            "image_user": "teste",
-            "comment": "Top"
-        },
-        {
-            "token_user" : 3,
-            "name_user": "Lux",
-            "image_user": "teste",
-            "comment": "Test"
-        }       
+            "date_id" : 15950778906511,
+            "visit": 1,
+            "date_visit": "18/07/2020"
+        }
+      
     ]   
 }

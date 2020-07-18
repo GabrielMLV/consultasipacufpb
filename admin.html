@@ -16,7 +16,9 @@
     <div class="uk-container">
         <div class="uk-section uk-preserve-color">
             <h1>Contador de visitas Consultas SIPAC</h1>
-            <div class='classNoFound' style='text-align:center'><h2 style='margin-top: 0px; margin-bottom: 0px;'>Visitas: <span id="rendVisit"></span></h2><p style='font-size:1.8rem;margin-top: 0px;'>Última visita em: <span id="rendDateVisit"></span></p></div>
+            <div class='classNoFound' style='text-align:center'>
+                <h2 style='margin-top: 0px; margin-bottom: 0px;'>Visitas: <span id="rendVisit" style="font-size: 3rem; font-weight: 700; color: #5f338a;"><span class="uk-margin-small-left" uk-spinner="ratio: 1"></span></span></h2><p style='font-size:1.4rem;margin-top: 0px;' id="lastAtt"></p>
+            </div>
             <!-- <div class="uk-child-width-1-1@s" uk-grid>
                 <div>
                     <h1>Contador de visitas Consultas SIPAC</h1>
@@ -26,11 +28,15 @@
                     </div>
                 </div>            
             </div> -->
+            <hr>
+            <span id="spinV" class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+            <canvas id="myChart"></canvas>
         </div>
     </div>
 	
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
 <!-- TODO: Add SDKs for Firebase products that you want to use

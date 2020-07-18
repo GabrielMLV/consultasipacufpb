@@ -19,26 +19,29 @@ window.onload = function () {
     const commentsRef = dbRef.child('comments');
     const visitRef = dbRef.child('visits');
 
-    setTimeout(function(){
-        var comment;
-        var res;
+    //console.log(Date.now())
+    setTimeout(function(){  
+        /* var comment;
+        var res */;
         var _date = moment().format('L') + " "+ moment().format('LTS');
-        visitRef.on("value", snap => {
+       /*   visitRef.on("value", snap => {
             comment = snap.val();
-            //console.log(comment);
+            console.log(comment);
             //console.log(comment.visit);
-            res = comment.visit;
-        });
+        }); */ 
+
         setTimeout(function(){
-            firebase.database().ref('visits').set({
-                visit: res + 1,
+            visitRef.push();
+            var resId = Date.now();
+            firebase.database().ref('visits/'+resId).set({
+                visit: 1,
                 date_visit: _date    
             });
         },200)
         
-    },1000)
+    },200)
 
-    const commentsListUI = document.getElementById("commentsList"); 
+ /*    const commentsListUI = document.getElementById("commentsList"); 
     commentsRef.on("value", snap => {  
         var html = ""; 
         let comment = snap.val();
@@ -66,7 +69,7 @@ window.onload = function () {
 
         });
         commentsListUI.innerHTML = html;                
-    });
+    }); */
 
     
 }
