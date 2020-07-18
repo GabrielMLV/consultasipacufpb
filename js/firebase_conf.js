@@ -1,4 +1,5 @@
 window.onload = function () {
+    moment.locale('pt-br');
     // Your web app's Firebase configuration
     var firebaseConfig = {
         apiKey: "AIzaSyBP6RKTW6R52UQn81uciReNqlQ9qwheF4c",
@@ -16,6 +17,26 @@ window.onload = function () {
     firebase.database();
     const dbRef = firebase.database().ref();
     const commentsRef = dbRef.child('comments');
+    const visitRef = dbRef.child('visits');
+
+    setTimeout(function(){
+        var comment;
+        var res;
+        var _date = moment().format('L') + " "+ moment().format('LTS');
+        visitRef.on("value", snap => {
+            comment = snap.val();
+            //console.log(comment);
+            //console.log(comment.visit);
+            res = comment.visit;
+        });
+        setTimeout(function(){
+            firebase.database().ref('visits').set({
+                visit: res + 1,
+                date_visit: _date    
+            });
+        },200)
+        
+    },1000)
 
     const commentsListUI = document.getElementById("commentsList"); 
     commentsRef.on("value", snap => {  
