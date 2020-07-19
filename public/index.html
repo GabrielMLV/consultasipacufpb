@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br" style="background: #5f338a;">
+
+<head>
+	<title>Consulta SIPAC</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/uikit.min.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+	<nav style="background: #5f338a; margin-bottom: 0px;" class="uk-navbar-container uk-margin" uk-navbar>
+		<div class="uk-navbar-center">
+			<ul class="uk-navbar-nav">
+				<li class="uk-active">
+					<a href="#">
+						<div style="text-align: center;padding-top: 5px;padding-bottom: 10px;">
+							<p style="color: white;font-size: 1.5rem;margin-bottom: 5px;font-weight: 700;">Consulta SIPAC</p>
+							<div class="uk-navbar-subtitle" style="font-weight: 100; color: #cacaca;">Sistema Integrado de Patrimônio, Administração e Contratos</div>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="uk-section uk-preserve-color">
+		<!--
+		<nav class="uk-navbar uk-navbar-container uk-margin">
+			<div class="uk-navbar-left">
+				<a class="uk-navbar-toggle" href="#">
+					<span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span>
+				</a>
+			</div>
+		</nav>
+		-->
+		<div class="uk-container uk-container-large" id="idTopHome">
+<!-- 			<h1 class="uk-heading-bullet" style="color: #5f338a; margin-bottom: 15px;">Consulta SIPAC</h1>
+ 			<p class="uk-article-meta" style="color: #333;margin-top: 10px;">Sistema Integrado de Patrimônio, Administração e Contratos</p>-->
+			<div class="uk-grid-medium uk-child-width-1-1" uk-grid>
+				<div>
+					<div style="border-radius: 10px;"
+						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small">						
+						<h3 class="uk-card-title">Preencha as informações</h3>
+						<form class="uk-form-stacked">
+							<div class="uk-margin">
+								<label class="uk-form-label" for="select_auxilio">Tipo de Auxílio</label>
+								<div class="uk-form-controls">
+									<select class="uk-select" id="select_auxilio">
+										<option value="0" selected disabled>Selecione o auxílio.</option>
+										<option value="auxilio_moradia">Moradia</option>
+										<option value="auxilio_alimentacao">Alimentação</option>
+										<option value="auxilio_alimentacao_residencia">Alimentação residência</option>
+										<option value="auxilio_emergencial">Auxílio emergencial COVID-19</option>
+										<option value="auxilio_residencia_rumf">Residência RUMF</option>
+										<option value="auxilio_residencia_rufet">Residência RUFET</option>
+										<option value="auxilio_residentes">Residencia Mangabeira e Santa Rita</option>
+
+									</select>
+								</div>
+							</div>							
+							<div class="uk-margin">
+								<label class="uk-form-label" for="select_campus">Selecione o Campus</label>
+								<div class="uk-form-controls">
+									<select class="uk-select" id="select_campus">
+										<option value="0" selected disabled>Selecione o campus.</option>
+										<option value="I">Campus I</option>
+										<option value="II">Campus II</option>
+										<option value="III">Campus III</option>
+										<option value="IV">Campus IV</option>
+										<option value="MANGABEIRA">Mangabeira e Santa Rita</option>
+									</select>
+								</div>
+							</div>
+						</form>
+						<div id="idSpinnSend" uk-spinner style="display: none;"></div>
+						<button id="idBtnSend" style="margin-bottom: 20px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary send">
+							Consultar
+						</button>
+						
+						<div class="uk-card-footer uk-text-center">
+							<a href="#renderHtmlProcess" id="goToDown" style="display: none;" uk-scroll></a>
+							<a style="display: none;" href="#modal-sections" class="uk-button uk-button-text" uk-toggle>Saiba mais</a>
+							<div id="lastSearch">
+							</div>							
+						</div>
+						<!--MODAL-->
+						<div id="modal-sections" uk-modal>
+							<div class="uk-modal-dialog">
+								<button class="uk-modal-close-default" type="button" uk-close></button>
+								<div class="uk-modal-header">
+									<h2 class="uk-modal-title">Sobre</h2>
+								</div>
+								<div class="uk-modal-body">
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+								</div>
+								<div class="uk-modal-footer uk-text-right">
+									<button class="uk-button uk-button-danger uk-modal-close" type="button">Fechar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Fim do Card-->
+			<div id="renderHtmlProcess" uk-scrollspy="cls: uk-animation-fade; target: .timeline-milestone; delay: 100; repeat: false">
+
+			</div>
+						
+			 <button style="display: none;" class="uk-icon-button loginGoogle" uk-icon="google-plus"></button> 
+			<div id="commentsList" style="display: none;">
+				<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+			</div>
+
+			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid uk-height-match="target: > div > .uk-card">
+				<div style="margin-top: 25px;">
+					<div style="border-radius: 10px;" class="uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin"
+						uk-grid>
+						<div class="uk-card-media-left uk-cover-container">
+							<img src="images/agility.png" alt="Agilidade" uk-cover />
+							<canvas width="200" height="150"></canvas>
+						</div>
+						<div>
+							<div class="uk-card-body uk-text-left@xl">
+								<h3 class="uk-card-title">Agilidade</h3>
+								<p style="text-align: justify;">O sistema foi pensado para agilizar a consulta dos processos de auxílios estudantis da UFPB, diminuindo o tempo de pesquisa e facilitando o acesso a qualquer estudante.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="margin-top: 25px;">
+					<div style="border-radius: 10px;" class=" uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin" 
+						uk-grid>
+						<div class="uk-card-media-left uk-cover-container">
+							<img src="images/process.png" alt="Processos" uk-cover />
+							<canvas width="200" height="150"></canvas>
+						</div>
+						<div>
+							<div class="uk-card-body uk-text-left@s">
+								<h3 class="uk-card-title">Entenda os processos</h3>
+								<p style="text-align: justify;">De segunda a sexta, em horário comercial, é coletado as informações do site do <a target="_blank" href="https://sipac.ufpb.br/public/jsp/portal.jsf"> SIPAC</a>. Essas informações são salvas em nosso banco de dados e estão disponíveis na forma de API Rest, podendo ser consumida por qualquer sistema. Para saber mais, acesse <a target="_blank" href="https://github.com/anaplb3/scrapy-sipac-processos"> aqui</a>.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<p>2020 &copy;<br>Ana Paula - Back-end 
+			<a href="mailto:ana.paula@dcx.ufpb.br">ana.paula@dcx.ufpb.br</a>
+			 <br>Gabriel Matheus - Front-end 
+		  <a href="mailto:gabriellopesveras@gmail.com">gabriellopesveras@gmail.com</a></p>
+	</footer>
+</body>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/moment-with-locales.js"></script>
+<script src="js/uikit.min.js"></script>
+<script src="js/uikit-icons.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/firebase_conf.js"></script>
+
+
+</html>
