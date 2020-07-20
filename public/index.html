@@ -20,7 +20,7 @@
 					<a href="#">
 						<div style="text-align: center;padding-top: 5px;padding-bottom: 10px;">
 							<p style="color: white;font-size: 1.5rem;margin-bottom: 5px;font-weight: 700;">Consulta SIPAC</p>
-							<div class="uk-navbar-subtitle" style="font-weight: 100; color: #cacaca;">Sistema Integrado de Patrimônio, Administração e Contratos</div>
+							<div class="uk-navbar-subtitle" style="font-weight: 400;color: #e0e0e0;">Sistema Integrado de Patrimônio, Administração e Contratos</div>
 						</div>
 					</a>
 				</li>
@@ -45,9 +45,9 @@
 					<div style="border-radius: 10px;"
 						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small">						
 						<h3 class="uk-card-title">Preencha as informações</h3>
-						<form class="uk-form-stacked">
+						<form class="uk-form-stacked" id="formMessage">
 							<div class="uk-margin">
-								<label class="uk-form-label" for="select_auxilio">Tipo de Auxílio</label>
+								<label class="uk-form-label" for="select_auxilio">Tipo de Auxílio <b style="color:red">*</b></label>
 								<div class="uk-form-controls">
 									<select class="uk-select" id="select_auxilio">
 										<option value="0" selected disabled>Selecione o auxílio.</option>
@@ -58,12 +58,13 @@
 										<option value="auxilio_residencia_rumf">Residência RUMF</option>
 										<option value="auxilio_residencia_rufet">Residência RUFET</option>
 										<option value="auxilio_residentes">Residencia Mangabeira e Santa Rita</option>
+										<option value="auxilio_emergencial_complementar">Auxílio complementar COVID-19</option>
 
 									</select>
 								</div>
 							</div>							
 							<div class="uk-margin">
-								<label class="uk-form-label" for="select_campus">Selecione o Campus</label>
+								<label class="uk-form-label" for="select_campus">Selecione o Campus <b style="color:red">*</b></label>
 								<div class="uk-form-controls">
 									<select class="uk-select" id="select_campus">
 										<option value="0" selected disabled>Selecione o campus.</option>
@@ -78,7 +79,7 @@
 						</form>
 						<div id="idSpinnSend" uk-spinner style="display: none;"></div>
 						<button id="idBtnSend" style="margin-bottom: 20px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary send">
-							Consultar
+							Consultar <span uk-icon="icon: search; ratio: 0.9"></span>
 						</button>
 						
 						<div class="uk-card-footer uk-text-center">
@@ -145,6 +146,55 @@
 								<p style="text-align: justify;">De segunda a sexta, em horário comercial, é coletado as informações do site do <a target="_blank" href="https://sipac.ufpb.br/public/jsp/portal.jsf"> SIPAC</a>. Essas informações são salvas em nosso banco de dados e estão disponíveis na forma de API Rest, podendo ser consumida por qualquer sistema. Para saber mais, acesse <a target="_blank" href="https://github.com/anaplb3/scrapy-sipac-processos"> aqui</a>.</p>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="uk-grid-medium uk-child-width-1-1" uk-grid>
+				<div>
+					<div style="border-radius: 10px;"
+						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small">						
+						<h3 class="uk-card-title">Deixe aqui sua sugestão :)</h3>
+						<form class="uk-form-stacked uk-grid-small" uk-grid>
+
+							<div class="uk-width-1-2@s">
+								<label class="uk-form-label" for="name_opt">Nome (Opcional)</label>
+								<div class="uk-form-controls">
+									<div class="uk-margin">
+										<div class="uk-inline" style="display: block;">
+											<span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
+											<input class="uk-input" type="text" id="name_opt" placeholder="Nome">
+										</div>
+										
+									</div>
+								</div>
+							</div>
+							<div class="uk-width-1-2@s" style="margin-top: 0px;">
+								<label class="uk-form-label" for="select_campus_form">Selecione o seu campus <b style="color:red">*</b></label>
+								<div class="uk-form-controls">
+									
+									<select class="uk-select" id="select_campus_form">
+										<option value="0" selected disabled>Selecione o campus</option>
+										<option value="I">Campus I</option>
+										<option value="II">Campus II</option>
+										<option value="III">Campus III</option>
+										<option value="IV">Campus IV</option>
+										<option value="MANGABEIRA">Mangabeira e Santa Rita</option>
+									</select>
+								</div>
+							</div>
+							<div class="uk-width-1-1@s">
+								<label class="uk-form-label" for="select_textearea_form">Sugestões ou melhorias <b style="color:red">*</b></label>
+								<div class="uk-inline" style="display: block;">
+									<a class="micStyle uk-form-icon uk-form-icon-flip uk-link-muted speakMic" uk-icon="icon: microphone"></a>
+									<textarea style="padding-right: 50px;" class="uk-textarea" id="select_textearea_form" rows="5" placeholder="Sugestões ou melhorias"></textarea>
+								</div>
+							</div>
+						</form>
+						<br>
+						<button id="idBtnSendSugestion" style="margin-bottom: 20px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary sendSugestion">
+							Enviar
+						</button>
 					</div>
 				</div>
 			</div>

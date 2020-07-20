@@ -20,26 +20,26 @@ window.onload = function () {
     const visitRef = dbRef.child('visits');
 
     //console.log(Date.now())
-    setTimeout(function(){  
-        /* var comment;
-        var res */;
-        var _date = moment().format('L') + " "+ moment().format('LTS');
-       /*   visitRef.on("value", snap => {
-            comment = snap.val();
-            console.log(comment);
-            //console.log(comment.visit);
-        }); */ 
-
-        setTimeout(function(){
-            visitRef.push();
-            var resId = Date.now();
-            firebase.database().ref('visits/'+resId).set({
-                visit: 1,
-                date_visit: _date    
-            });
-        },200)
-        
-    },200)
+    var url_atual = window.location.href;
+    var urlp = url_atual.split("///");
+    if(urlp[0] == "file:"){
+        console.log("Local");
+    }else{   
+        console.log("Remote")
+        setTimeout(function(){  
+            var _date = moment().format('L') + " "+ moment().format('LTS');
+            setTimeout(function(){
+                visitRef.push();
+                var resId = Date.now();
+                firebase.database().ref('visits/'+resId).set({
+                    visit: 1,
+                    date_visit: _date    
+                });
+            },200)
+            
+        },200);
+    }
+ 
 
  /*    const commentsListUI = document.getElementById("commentsList"); 
     commentsRef.on("value", snap => {  

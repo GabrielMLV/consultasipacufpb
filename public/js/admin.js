@@ -17,6 +17,7 @@ window.onload = function () {
     firebase.database();
     const dbRef = firebase.database().ref();
     const visitRef = dbRef.child('visits');
+    const comentsRef = firebase.database().ref('coments');
     visitRef.once("value", snap => {
         var arrCount = [];
         //console.log(snap.numChildren());
@@ -127,6 +128,61 @@ window.onload = function () {
                     }]
                 }
             }
+        });
+    }
+
+    $(document).on("click", ".loginAdmin", function(e){
+        var email = document.getElementById("emailAdmin").value;
+        var password = document.getElementById("passAdmin").value;
+        if(email.trim() == "" || email.length == 0){
+            UIkit.modal.dialog('<p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Necessário preencher o email.</p>');
+            return;
+        }else if(password.trim() == "" || password.length == 0){
+            UIkit.modal.dialog('<p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Necessário preencher a senha.</p>');
+            return;
+        }else{
+            //document.getElementById("formAdmin").style.display = "none";
+            //firebase.auth().languageCode = 'pt';
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function(usercred) {
+              var user = usercred.user;
+              console.log(user);
+              console.log("Anonymous account successfully upgraded"+ user);
+              UIkit.modal.dialog('<p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Olá '+user.email+'</p>');  
+              document.getElementById("emAdmin").innerHTML = "Olá "+ user.email;           
+              getAllSugestion();
+            }).catch(function(error) {
+              console.log("Error upgrading anonymous account"+ error);
+            });
+        }
+
+    });
+
+    //getAllSugestion();
+    function getAllSugestion(){
+        comentsRef.once("value", snap => {
+            const commentsListUI = document.getElementById("situationList");
+            //console.log(snap.numChildren());
+            var html = ""; 
+            let comment = snap.val();
+            console.log(comment);
+            if(comment == null || comment == ""){
+                html += '<p style="text-align:center">Nenhuma sugestão encontrada.</p>'
+                commentsListUI.innerHTML = html;
+            }else{
+                html += '<h2>Sugestões</h2>';
+                for(var i in comment){
+                    var childData = comment[i];
+                    html += '<dt> Nome: '+childData.name +' - Campus: '+childData.campus + '- Data criação: '+childData.date_created +'</dt>';
+                    html += '<dd>Comentário: '+childData.message+' </<dd>';
+                };
+                commentsListUI.innerHTML = html;  
+            }       
+            /* for (v in resp) {
+                arrCount.push(v);
+            }  */
+            //document.getElementById("rendVisit").innerHTML = snap.numChildren();
+            //console.log(arrCount.length);
+    
         });
     }
 

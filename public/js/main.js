@@ -278,4 +278,86 @@ $(document).ready(function() {
         $(this).closest('.timeline-milestone').next('.timeline-milestone').find('.timeline-action .title').focus();
       }
     });
-  });                  
+  });    
+  
+$(document).on("click", ".sendSugestion", function(e){
+    e.preventDefault();
+    var name_opt = document.getElementById("name_opt");
+    var campus_opt = document.getElementById("select_campus_form");
+    var description_opt = document.getElementById("select_textearea_form");
+
+    if(name_opt.value.length == 0 || name_opt.value.trim() == ""){
+        name_opt.value = "Anônimo";
+    }
+    if(campus_opt.value == 0){
+        campus_opt.classList.add("uk-form-danger");
+        setTimeout(function(){
+            campus_opt.classList.remove("uk-form-danger"); 
+        },3000)
+        UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o seu campus.', status: 'danger' });
+        return;
+    }else if(description_opt.value.trim() == "" || description_opt.value.length == 0){
+        description_opt.classList.add("uk-form-danger");
+        setTimeout(function(){
+        description_opt.classList.remove("uk-form-danger"); 
+        },3000)
+        UIkit.notification({ message: '<span uk-icon="icon: close"></span> É necessário preencher a mensagem.', status: 'danger' });
+        return;
+    }else{
+        sendSugestion(name_opt.value, campus_opt.value, description_opt.value)
+    }
+
+});
+
+function sendSugestion(name, campus, description){
+    moment.locale('pt-br');
+    //visitRef.push();
+    var _date = moment().format('L') + " "+ moment().format('LTS');
+    var resId = Date.now();
+    firebase.database().ref('coments/'+resId).set({
+        name: name,
+        campus: campus,
+        message: description,
+        date_created: _date   
+    }, function(error) {
+        if (error) {
+          // The write failed...
+          UIkit.notification({ message: '<span uk-icon="icon: close"></span> Oops! Algum erro aconteceu no envio da mensagem :/.', status: 'danger' });
+        return;
+        } else {
+        // Data saved successfully!
+          document.getElementById("name_opt").value = "";
+          document.getElementById("select_campus_form").value = 0;
+          document.getElementById("select_textearea_form").value = ""; 
+          var rp = Math.floor((Math.random() * 4) + 1);
+          UIkit.modal.dialog('<div style="text-align:center"><img src="images/gato'+rp+'.png" style="width: 140px; height: 140px;margin-top: 15px;"/> <p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Obrigado por ajudar com o crescimento do sitema!</p></div>');
+        }
+    });
+    
+};
+
+$(document).on("click", ".speakMic", function(e){
+    //document.getElementById("select_textearea_form").focus();
+    const recognition = new webkitSpeechRecognition();
+    recognition.interimResults = true;
+    recognition.showPartial = true,
+    recognition.lang = "pt-BR";
+    recognition.continuous = false;
+    recognition.start();
+    // This event happens when you talk in the microphone
+    recognition.onresult = function(event) {
+      var html = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+       //console.log(event.results[i][0].transcript.trim());
+       html += event.results[i][0].transcript.trim();
+       document.getElementById("select_textearea_form").value = html;
+        if (event.results[i].isFinal) {
+          // Here you can get the string of what you told
+          document.getElementById("select_textearea_form").focus();
+/*           const content = event.results[i][0].transcript.trim();
+
+          output.textContent = content; */
+        } 
+      }
+    };
+});

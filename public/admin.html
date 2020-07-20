@@ -14,7 +14,22 @@
 
 <body>
     <div class="uk-container">
+       
         <div class="uk-section uk-preserve-color">
+            <div  id="formAdmin">
+                <form class="uk-grid-small" uk-grid>           
+                    <div class="uk-width-1-2@s">
+                        <input id="emailAdmin" class="uk-input" type="email" placeholder="Email">
+                    </div>
+                    <div class="uk-width-1-4@s">
+                        <input id="passAdmin" class="uk-input" type="password" placeholder="Senha">
+                    </div>
+                </form>
+                <button style="margin-top:10px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary loginAdmin">
+                    Entrar
+                </button>
+            </div>
+           <p style="text-align: center; font-size:1.5rem; margin-top: 0px; margin-bottom: 0px;" id="emAdmin"></p>
             <h1>Contador de visitas Consultas SIPAC</h1>
             <div class='classNoFound' style='text-align:center'>
                 <h2 style='margin-top: 0px; margin-bottom: 0px;'>Visitas: <span id="rendVisit" style="font-size: 3rem; font-weight: 700; color: #5f338a;"><span class="uk-margin-small-left" uk-spinner="ratio: 1"></span></span></h2><p style='font-size:1.4rem;margin-top: 0px;' id="lastAtt"></p>
@@ -31,7 +46,11 @@
             <hr>
             <span id="spinV" class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
             <canvas id="myChart"></canvas>
+            <dl id="situationList" class="uk-description-list uk-description-list-divider">
+
+            </dl>
         </div>
+        
     </div>
 	
 </body>
