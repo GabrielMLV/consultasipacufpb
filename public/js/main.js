@@ -41,10 +41,10 @@ var obj_default = [
         "unidade_destino": "PRA - ARQUIVO DA DAF (11.01.08.01.02.02)",
     }
 ]
-window.onload = function () {
+
+$(function() {    
     moment.locale('pt-br');  
-    //console.log(obj_default);
-}
+});
 
 $(document).on("click", ".send", function(e){
     //console.log("Click send");
@@ -150,7 +150,10 @@ function renderProcess(res) {
                 html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
                 html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
                 html += '<div class="content">';
-                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
+                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;
+                html += '</div>';
+                html += '<div class="content">';
+                html += '<b>Última movimentação em:</b>'+dt.recebido_em;
                 html += '</div>';
                 html += '<div class="content">';
                 html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
@@ -167,6 +170,9 @@ function renderProcess(res) {
                 html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
                 html += '<div class="content">';
                 html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
+                html += '</div>';
+                html += '<div class="content">';
+                html += '<b>Última movimentação em:</b>'+dt.recebido_em;
                 html += '</div>';
                 html += '<div class="content">';
                 html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
