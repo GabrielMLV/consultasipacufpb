@@ -18,7 +18,6 @@ window.onload = function () {
     const dbRef = firebase.database().ref();
     const commentsRef = dbRef.child('comments');
     const visitRef = dbRef.child('visits');
-
     //console.log(Date.now())
     var url_atual = window.location.href;
     var urlp = url_atual.split("///");
@@ -35,10 +34,12 @@ window.onload = function () {
                     visit: 1,
                     date_visit: _date    
                 });
-            },200)
+            },200);
             
         },200);
     }
+
+  
  
 
  /*    const commentsListUI = document.getElementById("commentsList"); 

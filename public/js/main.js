@@ -131,7 +131,7 @@ function renderProcess(res) {
     document.getElementById("goToDown").click(); 
     if (dt == "" || typeof dt == "undefined" || dt == null || dt == "Algo deu errado. 'NoneType' object is not iterable") {
         var rp = Math.floor((Math.random() * 4) + 1);
-        html += "<div class='classNoFound' style='text-align:center'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
+        html += "<div class='classNoFound' style='text-align:center; margin-top:25px;'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
         //errorGetProcess("Nenhum processo encontrado, tente novamente mais tarde.");
     } else {                   
         html += '<article style="margin-top: 20px;" class="page">';

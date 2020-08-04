@@ -17,6 +17,15 @@ window.onload = function () {
     const dbRef = firebase.database().ref();
     const visitRef = dbRef.child('visits');
     const comentsRef = firebase.database().ref('coments');
+
+
+ /*    var today = moment().format('L');
+    console.log(today);
+    var resId = Date.now();
+    visitRef.orderByChild("date_visit").startAt( resId ).on( "value" , function ( snapshot )  {
+        console.log(snapshot.numChildren());
+    });  */
+
     visitRef.on("value", snap => {
         var arrCount = [];
         var arrToday = [];
