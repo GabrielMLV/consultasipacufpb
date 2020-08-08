@@ -10,16 +10,30 @@
 	<link rel="shortcut icon" href="images/favicon.ico" />
 	<link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Sarabun' rel='stylesheet'>
+	<link rel="stylesheet" type="text/css" href="css/star-rating-svg.css">
+	<link rel="stylesheet" type="text/css" href="css/css-loader.css">
 </head>
 
 <body>
-
-	<nav style="background: #5f338a; margin-bottom: 0px;" class="uk-navbar-container uk-margin" uk-navbar>
+	 <!-- início do preloader -->
+	 <div id="preloader">
+        <div class="inner">
+           <!-- HTML DA ANIMAÇÃO MUITO LOUCA DO SEU PRELOADER! -->
+           <div class="bolas">
+              <div></div>
+              <div></div>
+              <div></div>                    
+           </div>
+        </div>
+    </div>
+	<!-- fim do preloader --> 
+	<div id="id_load" class="loader loader-default"></div>
+	<nav style="background: #5f338a; margin-bottom: 0px; margin-top: 0px !important;" class="uk-navbar-container uk-margin" uk-navbar>
 		<div class="uk-navbar-center">
 			<ul class="uk-navbar-nav">
 				<li>
 					<a href="#" style="padding: 0px !important;">
-						<div style="text-align: center;padding-top: 5px;padding-bottom: 10px;">
+						<div style="text-align: center;">
 							<p style="color: white;font-size: 1.5rem;margin-bottom: 5px;font-weight: 700;">Consulta SIPAC</p>
 							<div class="uk-navbar-subtitle" style="font-weight: 400;color: #e0e0e0;">Sistema Integrado de Patrimônio, Administração e Contratos</div>
 						</div>
@@ -30,67 +44,81 @@
 
 	</nav>
 	<div id="WAButton"></div>
-	<div class="uk-section uk-preserve-color">
-		<!--
-		<nav class="uk-navbar uk-navbar-container uk-margin">
-			<div class="uk-navbar-left">
-				<a class="uk-navbar-toggle" href="#">
-					<span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span>
-				</a>
-			</div>
-		</nav>
-		-->
+	<div class="uk-section uk-preserve-color" style="padding-top: 20px;">	
+		<!-- <div uk-countdown="date: 2020-08-08T16:35:28-03:00">
+			<span class="uk-countdown-number uk-countdown-days"></span>
+			<span class="uk-countdown-number uk-countdown-hours"></span>
+			<span class="uk-countdown-number uk-countdown-minutes"></span>
+			<span class="uk-countdown-number uk-countdown-seconds"></span>
+		</div> -->	
 		<div class="uk-container uk-container-large" id="idTopHome">
-<!-- 			<h1 class="uk-heading-bullet" style="color: #5f338a; margin-bottom: 15px;">Consulta SIPAC</h1>
- 			<p class="uk-article-meta" style="color: #333;margin-top: 10px;">Sistema Integrado de Patrimônio, Administração e Contratos</p>-->
-			<div class="uk-grid-medium uk-child-width-1-1" uk-grid>
+ 			<p class="uk-article-meta" style="color: #333;text-align: justify;">De segunda a sexta, a cada 30 minutos é realizado uma consulta para verificar o andamento dos processos do <strong>SIPAC</strong>.</p>
+			<div class="uk-grid-medium uk-child-width-1-1" uk-grid="masonry: true">
 				<div>
-					<div style="border-radius: 10px;"
-						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small">						
-						<h3 class="uk-card-title">Preencha as informações</h3>
+					<div style="border-radius: 10px; border-top: 3px solid #5f338a;"
+						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small ">						
+						<h3 class="uk-card-title uk-text-center">Preencha as informações</h3>
 						<form class="uk-form-stacked" id="formMessage">
-							<div class="uk-margin">
-								<label class="uk-form-label" for="select_auxilio">Tipo de Auxílio <b style="color:red">*</b></label>
-								<div class="uk-form-controls">
-									<select class="uk-select" id="select_auxilio">
-										<option value="0" selected disabled>Selecione o auxílio.</option>
-										<option value="auxilio_moradia">Moradia</option>
-										<option value="auxilio_alimentacao">Alimentação</option>
-										<option value="auxilio_alimentacao_residencia">Alimentação residência</option>
-										<option value="auxilio_emergencial">Auxílio emergencial COVID-19</option>
-										<option value="auxilio_residencia_rumf">Residência RUMF</option>
-										<option value="auxilio_residencia_rufet">Residência RUFET</option>
-										<option value="auxilio_residentes">Residencia Mangabeira e Santa Rita</option>
-										<option value="auxilio_emergencial_complementar">Auxílio complementar COVID-19</option>
+							<div class="uk-grid-small uk-flex-center uk-grid uk-text-left" uk-grid>
+								<div class="uk-width-auto@m"></div>
+								<div class="uk-width-1-2@m">
+									<div class="uk-margin">
+										<!-- <label class="uk-form-label" for="select_campus">Campus <b style="color:red">*</b></label> -->
+										<div class="uk-form-controls">
+											<select class="uk-select styleSelect" id="select_campus">
+												<option value="0" selected disabled>Selecione o campus <b style="color:red">*</b></option>
+												<option value="1-I">Campus I</option>
+												<option value="2-II">Campus II</option>
+												<option value="3-III">Campus III</option>
+												<option value="4-IV">Campus IV</option>
+												<option value="5-V">Mangabeira e Santa Rita</option>
+											</select>
+										</div>
+									</div>
 
-									</select>
+									<div id="divAuxi" class="uk-margin">
+										<!-- <label class="uk-form-label" for="select_auxilio">Auxílio <b style="color:red">*</b></label> -->
+										<div class="uk-form-controls">
+											<select disabled class="uk-select styleSelect" id="select_auxilio">
+												<option value="0" selected disabled>Necessário selecionar o campus.</option>
+												<!-- <option value="auxilio_moradia">Moradia</option>
+												<option value="auxilio_alimentacao">Alimentação</option>
+												<option value="auxilio_alimentacao_residencia">Alimentação residência</option>
+												<option value="auxilio_emergencial">Auxílio emergencial COVID-19</option>
+												<option value="auxilio_residencia_rumf">Residência RUMF</option>
+												<option value="auxilio_residencia_rufet">Residência RUFET</option>
+												<option value="auxilio_residentes">Residencia Mangabeira e Santa Rita</option>
+												<option value="auxilio_emergencial_complementar">Auxílio complementar COVID-19</option> -->
+		
+											</select>
+										</div>
+									</div>	
 								</div>
-							</div>							
-							<div class="uk-margin">
-								<label class="uk-form-label" for="select_campus">Selecione o Campus <b style="color:red">*</b></label>
-								<div class="uk-form-controls">
-									<select class="uk-select" id="select_campus">
-										<option value="0" selected disabled>Selecione o campus.</option>
-										<option value="I">Campus I</option>
-										<option value="II">Campus II</option>
-										<option value="III">Campus III</option>
-										<option value="IV">Campus IV</option>
-										<option value="MANGABEIRA">Mangabeira e Santa Rita</option>
-									</select>
-								</div>
-							</div>
+								<div class="uk-width-auto@m"></div>
+							</div>			
 						</form>
-						<div id="idSpinnSend" uk-spinner style="display: none;"></div>
-						<button id="idBtnSend" style="margin-bottom: 20px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary send">
-							Consultar <span uk-icon="icon: search; ratio: 0.9"></span>
-						</button>
+						<div class="uk-grid-small uk-flex-center uk-grid uk-text-center" uk-grid>
+							<div class="uk-width-auto@m"></div>
+							<div class="uk-width-1-2@m">
+								<div class="uk-margin">
+									<div id="idSpinnSend" uk-spinner style="display: none;"></div>
+									<button id="idBtnSend" disabled style="height: 55px; border-radius: 35px;background-color: #ccc !important; color:white;" class="styleBtn uk-button uk-width-1-1 uk-button-primary send">
+										Consultar <span uk-icon="icon: search; ratio: 0.8"></span>
+									</button>
+								</div>
+								
+							</div>
+							<div class="uk-width-auto@m"></div>
+						</div>
 						
-						<div class="uk-card-footer uk-text-center">
+							
+						<!-- <div class="uk-card-footer uk-text-center"> -->
 							<a href="#renderHtmlProcess" id="goToDown" style="display: none;" uk-scroll></a>
 							<a style="display: none;" href="#modal-sections" class="uk-button uk-button-text" uk-toggle>Saiba mais</a>
-							<div id="lastSearch">
+							<div id="lastSearch" class="uk-text-right">
+								
 							</div>							
-						</div>
+						<!-- </div> -->
 						<!--MODAL-->
 						<div id="modal-sections" uk-modal>
 							<div class="uk-modal-dialog">
@@ -114,19 +142,33 @@
 			<div id="renderHtmlProcess" uk-scrollspy="cls: uk-animation-fade; target: .timeline-milestone; delay: 100; repeat: false">
 
 			</div>
-						
-			 <button style="display: none;" class="uk-icon-button loginGoogle" uk-icon="google-plus"></button> 
+			<div id="countRef" style="display: none;" class="uk-flex uk-flex-middle uk-flex-center uk-text-center uk-grid-small uk-child-width-auto uk-margin" uk-grid>
+				<p>Próxima consulta em:</p>
+				<div style="padding: 0px;">
+					<div class="uk-countdown-number uk-countdown-hours" style="padding: 0px 5px; font-size: 2rem; color: #5f338a;"></div>
+				</div>
+				<div class="uk-countdown-separator" style="font-size: 2rem;padding-left: 0px;">:</div>
+ 				<div style="padding: 0px;">
+					<div class="uk-countdown-number uk-countdown-minutes" style="padding: 0px 5px; font-size: 2rem;color: #5f338a;"></div>	
+				</div>
+				<div class="uk-countdown-separator" style="font-size: 2rem;padding-left: 0px;">:</div>
+				<div style="padding: 0px;">
+					<div class="uk-countdown-number uk-countdown-seconds" style="padding: 0px 5px; font-size: 2rem; color: #5f338a;"></div>
+				</div>
+			</div>	
+
+			<button style="display: none;" class="uk-icon-button loginGoogle" uk-icon="google-plus"></button> 
 			<div id="commentsList" style="display: none;">
 				<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
 			</div>
 
 			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid uk-height-match="target: > div > .uk-card">
 				<div style="margin-top: 25px;">
-					<div style="border-radius: 10px;" class="uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin"
+					<div style="border-radius: 10px; " class="uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin"
 						uk-grid>
 						<div class="uk-card-media-left uk-cover-container">
 							<img src="images/agility.png" alt="Agilidade" uk-cover />
-							<canvas width="200" height="150"></canvas>
+							<canvas width="150" height="100"></canvas>
 						</div>
 						<div>
 							<div class="uk-card-body uk-text-left@xl">
@@ -137,11 +179,11 @@
 					</div>
 				</div>
 				<div style="margin-top: 25px;">
-					<div style="border-radius: 10px;" class=" uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin" 
+					<div style="border-radius: 10px; " class=" uk-card uk-card-default uk-card-hover uk-grid-collapse uk-card-small uk-child-width-1-2@s uk-margin" 
 						uk-grid>
 						<div class="uk-card-media-left uk-cover-container">
 							<img src="images/process.png" alt="Processos" uk-cover />
-							<canvas width="200" height="150"></canvas>
+							<canvas width="150" height="100"></canvas>
 						</div>
 						<div>
 							<div class="uk-card-body uk-text-left@s">
@@ -151,11 +193,23 @@
 						</div>
 					</div>
 				</div>
-			</div>
-
+			</div>	
+		<!-- 	<div class="uk-grid-small uk-child-width-1-3@s uk-text-center" uk-grid>
+				<div></div>
+				<div>
+					<div class="uk-card uk-card-body uk-card-small uk-card-body uk-animation-slide-left-small" style="border-radius: 10px; background: white;">
+						<span class="my-rating"></span> <br>
+						<span class="live-rating"></span>
+						<button style="margin-bottom: 20px;border-radius: 5px;background-color: #5f338a !important;" class="uk-button uk-button-primary">
+							Enviar avaliação
+						</button>
+					</div>
+				</div>				
+				<div></div>
+			</div> -->		
 			<div class="uk-grid-medium uk-child-width-1-1" uk-grid>
 				<div>
-					<div style="border-radius: 10px;"
+					<div style="border-radius: 10px; border-top: 3px solid #5f338a;"
 						class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body uk-animation-slide-top-small">						
 						<h3 class="uk-card-title">Deixe aqui sua sugestão :)</h3>
 						<form class="uk-form-stacked uk-grid-small" uk-grid>
@@ -166,7 +220,7 @@
 									<div class="uk-margin">
 										<div class="uk-inline" style="display: block;">
 											<span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
-											<input class="uk-input" type="text" id="name_opt" placeholder="Nome">
+											<input class="uk-input" style="border-radius: 35px; padding-left: 15px; height: 55px !important;" type="text" id="name_opt" placeholder="Nome">
 										</div>
 										
 									</div>
@@ -176,7 +230,7 @@
 								<label class="uk-form-label" for="select_campus_form">Selecione o seu campus <b style="color:red">*</b></label>
 								<div class="uk-form-controls">
 									
-									<select class="uk-select" id="select_campus_form">
+									<select style="border-radius: 35px; padding-left: 15px; height: 55px !important;" class="uk-select" id="select_campus_form">
 										<option value="0" selected disabled>Selecione o campus</option>
 										<option value="I">Campus I</option>
 										<option value="II">Campus II</option>
@@ -190,7 +244,7 @@
 								<label class="uk-form-label" for="select_textearea_form">Sugestões ou melhorias <b style="color:red">*</b></label>
 								<div class="uk-inline" style="display: block;">
 									<a class="micStyle uk-form-icon uk-form-icon-flip uk-link-muted speakMic" uk-icon="icon: microphone"></a>
-									<textarea style="padding-right: 50px;" class="uk-textarea" id="select_textearea_form" rows="5" placeholder="Sugestões ou melhorias"></textarea>
+									<textarea style="padding-right: 50px; border-radius: 20px; padding-left: 15px;" class="uk-textarea" id="select_textearea_form" rows="5" placeholder="Sugestões ou melhorias"></textarea>
 								</div>
 							</div>
 						</form>
@@ -204,11 +258,41 @@
 		</div>
 	</div>
 	
-	<footer>
-		<p>2020 &copy;<br>Ana Paula - Back-end 
-			<a href="mailto:ana.paula@dcx.ufpb.br">ana.paula@dcx.ufpb.br</a>
-			 <br>Gabriel Matheus - Front-end 
-		  <a href="mailto:gabriellopesveras@gmail.com">gabriellopesveras@gmail.com</a></p>
+	<footer>	
+		<div class="uk-container">
+
+		
+		<div class="uk-grid-small uk-child-width-1-4@s uk-text-center" uk-grid>
+			<div></div>
+			<div>
+				<div class="uk-card uk-card-body  uk-card-hover uk-card-small uk-card-body uk-animation-slide-left-small" style="border-radius: 10px; background-color: #4e2279 !important; border-top: 3px solid white;">
+					<span style="margin-bottom: 10px; color:white">Ana Paula Lima - Back-end</span>
+					<br>
+					<a href="https://www.linkedin.com/in/ana-paula-lima-borges/" class="uk-icon-button" target="_blank" uk-icon="icon:linkedin; ratio: 1" style="color: #5f338a; width: 30px; height: 30px;"></a>
+					<a href="mailto:ana.paula@dcx.ufpb.br" class="uk-icon-button" uk-icon="google-plus" style="color: #5f338a; width: 30px; height: 30px;"></a> 
+				</div>
+			</div>
+			<div>
+				<div class="uk-card uk-card-body  uk-card-hover uk-card-small uk-card-body uk-animation-slide-right-small" style="border-radius: 10px; background-color: #4e2279 !important; border-top: 3px solid white;">
+					<span style="margin-bottom: 10px; color:white">Gabriel Matheus - Front-end</span> 
+					<br>
+					<a target="_blank" href="https://www.linkedin.com/in/gabriel-matheus-a54907144/" class="uk-icon-button" uk-icon="linkedin" style="color: #5f338a; width: 30px; height: 30px;"></a>
+					<a href="mailto:gabriellopesveras@gmail.com" class="uk-icon-button" uk-icon="google-plus" style="color: #5f338a; width: 30px; height: 30px;"></a>
+				</div>
+			</div>
+			<div></div>
+		</div>
+		
+	<!-- 	<div class="uk-column-1-2 uk-column-divider" style="padding: 0px 10px;">
+			<p style="text-align: center;">
+					
+			</p>
+			<p style="text-align: center;">
+				
+			</p>
+		</div> -->
+		<p style="margin-bottom: 15px;">&copy; SIPAC 2020</p>	
+		</div>				 						
 	</footer>
 </body>
 
@@ -221,11 +305,13 @@
 <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
 
 <script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/jquery.star-rating-svg.js"></script>
 <script src="js/moment-with-locales.js"></script>
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/firebase_conf.js"></script>
+
 
 
 </html>
