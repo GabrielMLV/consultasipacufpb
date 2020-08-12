@@ -2,12 +2,18 @@ $(window).on('load', function () {
     $('#preloader .inner').fadeOut();
     $('#preloader').delay(350).fadeOut('slow'); 
     $('body').delay(350).css({'overflow': 'visible'});
+    
     //localStorage.setItem('nome','Jack Sparrow22');
     const verifyLastSearch = localStorage.getItem('last_search');
     if(verifyLastSearch !== null){
         document.getElementById("lastSearch").innerHTML = verifyLastSearch;
     }else{
         document.getElementById("lastSearch").innerHTML = '<span style="font-size:13px;">Bem-vindo!</span>'
+    }
+    var idAux = localStorage.getItem('id_auxilio');
+    if(idAux !== null){
+        insertLocalInfos();      
+        disabledBtnSarch();
     }
 })
 var loadSpinn = '<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>';
@@ -59,18 +65,19 @@ var templateCountDown = `<div style="display: inline-flex;margin: 0px 0px 0px 0p
 <div style="padding: 0px;">
     <div class="uk-countdown-number uk-countdown-days" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
 </div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">:</div>
+<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">d</div>
 <div style="padding: 0px;">
     <div class="uk-countdown-number uk-countdown-hours" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
 </div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">:</div>
+<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">h</div>
  <div style="padding: 0px;">
     <div class="uk-countdown-number uk-countdown-minutes" style="padding: 0px 5px; font-size:1rem; font-weight: 900;"></div>	
 </div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">:</div>
+<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">m</div>
 <div style="padding: 0px;">
     <div class="uk-countdown-number uk-countdown-seconds" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
 </div>
+<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">s</div>
 </div>`;
 
 $(function() {    
@@ -118,14 +125,18 @@ $(document).on("change", "#select_campus", function(e){
     e.stopImmediatePropagation();
 });
 
-  $(document).on("change", "#select_auxilio", function(e){
-    
+  $(document).on("change", "#select_auxilio", function(e){   
+    disabledBtnSarch()
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+});
+
+function disabledBtnSarch(){
     const btnSend = document.getElementById("idBtnSend");
     btnSend.disabled = false; 
     btnSend.style.background = "#5f338a";
-    e.preventDefault();
-    e.stopImmediatePropagation();
-})  
+}
 
 function renderAuxilios(data){
     //console.log(data);
@@ -139,6 +150,12 @@ function renderAuxilios(data){
         html += '<option value="'+dt[i].tipo_auxilio+'">'+dt[i].nome_visualizacao+'</option>';
     }
     document.getElementById("select_auxilio").innerHTML = html.toString();
+    setTimeout(function(){
+        const idAux = localStorage.getItem('id_auxilio');
+        if( idAux !== null){
+            document.getElementById("select_auxilio").value = idAux;
+        }
+    },200);
 }
 
 function errorGetAuxilios(_status){
@@ -156,6 +173,7 @@ $(document).on("click", ".send", function(e){
     document.getElementById("idBtnSend").style.display = "none";
     var auxilio = document.getElementById("select_auxilio");
     var campus = document.getElementById("select_campus");
+    const checkSaveInfo = document.getElementById("saveSearch");
     const aux = auxilio.value;
     const camp = campus.value.split("-");
     if(auxilio.value == 0 || auxilio.value == null || typeof auxilio.value == "undefined"){
@@ -177,6 +195,13 @@ $(document).on("click", ".send", function(e){
         //renderProcess(_dt)
         var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?auxilio="+aux+"&campus="+camp[1];
         //console.log(urlProcess);
+        if(checkSaveInfo.checked == true){
+            localStorage.setItem('id_auxilio', aux);
+            localStorage.setItem('id_campus', campus.value);
+        }else{
+            localStorage.removeItem('id_auxilio');
+            localStorage.removeItem('id_campus');
+        }
         openLoader();
         getFunction(urlProcess, renderProcess, errorGetProcess);
     }
@@ -186,20 +211,6 @@ $(document).on("click", ".send", function(e){
 })
 
 function getFunction(urlProcess, cbSuccess, cbError) {
-   // console.log("Chamou func");
-/*    $.ajax({
-    method: "GET",
-    url: url,
-    data: null,
-    dataType: 'json',
-    contentType: "application/json",
-    success: function(body){
-        console.log(body);
-    }, error: function(status){
-        console.log(status)
-    }
-    
-  }); */
 
     var xmlHttp = new XMLHttpRequest();
     var theUrl = urlProcess;
@@ -250,19 +261,16 @@ function renderProcess(res) {
     var resPars = JSON.parse(res);
     //console.log(resPars);
     var dt = resPars.response.body;
-    console.log(dt);
     document.getElementById("renderHtmlProcess").innerHTML = "";
-    var typeAux = dt.tipo_auxilio.split("_").join(' ');
-    var date_hour_now = '<span style="font-size:13px;">Você consultou pela última vez em: <span id="rendBadgHour">'+moment().format('L') +' - '+ moment().format('LTS')+'</span> o  <b>'+typeAux.toUpperCase()+'</b> do campus <b>'+dt.campus+'</b></span>';
-    document.getElementById("lastSearch").innerHTML = date_hour_now;
-    localStorage.setItem('last_search', date_hour_now);
     var html = "";
     document.getElementById("goToDown").click(); 
     if (dt == "" || typeof dt == "undefined" || dt == null ) {
         var rp = Math.floor((Math.random() * 4) + 1);
         html += "<div class='classNoFound' style='text-align:center; margin-top:25px;'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
         //errorGetProcess("Nenhum processo encontrado, tente novamente mais tarde.");
+        //saveLast(dt);
     } else { 
+        saveLast(dt);
         const t1 = moment(dt.proxima_atualizacao_em).format();
         //const t2 = moment(t1).add(1, 'hour');   
         //console.log(t1);
@@ -378,6 +386,13 @@ function renderProcess(res) {
     }
     document.getElementById("renderHtmlProcess").innerHTML = html;
 
+}
+
+function saveLast(dt){
+    var typeAux = dt.tipo_auxilio.split("_").join(' ');
+    var date_hour_now = '<span style="font-size:13px;">Última consulta em: <span id="rendBadgHour">'+moment().format('L') +' - '+ moment().format('LTS')+'</span> -  <b>'+typeAux.toUpperCase()+'</b> do campus <b>'+dt.campus+'</b></span>';
+    document.getElementById("lastSearch").innerHTML = date_hour_now;
+    localStorage.setItem('last_search', date_hour_now);
 }
 
 function errorGetProcess(_status) {
@@ -515,4 +530,37 @@ function openLoader(){
 function closeLoader(){
     const loader = document.getElementById("id_load");
     loader.classList.remove("is-active");
+}
+
+
+/* $(document).on("click", ".gerar", function(e){
+    var doc = new jsPDF();
+    var elementHTML = $('#renderHtmlProcess').html();
+    var specialElementHandlers = {
+        '#elementH': function (element, renderer) {
+            return true;
+        }
+    };
+    doc.fromHTML(elementHTML, 15, 15, {
+        'width': 170,
+        'elementHandlers': specialElementHandlers
+    });
+
+    // Save the PDF
+    doc.save('processos.pdf');
+}); */
+
+function insertLocalInfos(){
+    const idAux = localStorage.getItem('id_auxilio');
+    const idCampus = localStorage.getItem('id_campus');
+    document.getElementById("saveSearch").checked = true;
+    const idCampusSplit = idCampus.split("-");
+    console.log(idCampus);
+    document.getElementById('select_campus').value = idCampus;
+    console.log("Chamou infos");    
+    var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?auxilio="+idAux+"&campus="+idCampusSplit[1];
+    getFunction(urlProcess, renderProcess, errorGetProcess);
+    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+idCampusSplit[0]+"/auxilios";
+    document.getElementById("select_auxilio").innerHTML = '<option value="0" selected disabled>Procurando auxilios...</option>';
+    getFunction(url, renderAuxilios, errorGetAuxilios);
 }

@@ -96,4 +96,4 @@ $(document).on("click", ".loginGoogle", function(e){
         var credential = error.credential;
         // ...
     });
-})
+});

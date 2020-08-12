@@ -9,6 +9,12 @@
 
 }
 
+.uk-checkbox:checked, .uk-checkbox:indeterminate, .uk-radio:checked {
+  background-color: #5f338a !important;
+  border-color: transparent;
+  border-radius: 2px;
+}
+
 .styleSelect{
   border-radius: 35px;
   text-align-last:center;

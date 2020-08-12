@@ -1,4 +1,7 @@
 window.onload = function () {
+    $('#preloader .inner').fadeOut();
+    $('#preloader').delay(350).fadeOut('slow'); 
+    $('body').delay(350).css({'overflow': 'visible'});
     moment.locale('pt-br');
     var firebaseConfig = {
         apiKey: "AIzaSyBP6RKTW6R52UQn81uciReNqlQ9qwheF4c",
@@ -200,18 +203,21 @@ window.onload = function () {
         }else{
             document.getElementById("formAdmin").style.display = "none";
             //firebase.auth().languageCode = 'pt';
+            console.log("login");
             firebase.auth().signInWithEmailAndPassword(email, password).then(function(usercred) {
               var user = usercred.user;
-              console.log(user);
+              //console.log(user);
               console.log("Anonymous account successfully upgraded"+ user);
-              UIkit.modal.dialog('<p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Olá '+user.email+'</p>');  
+              //UIkit.modal.dialog('<p style="font-size: 1.5rem;" class="uk-modal-body">Olá '+user.email+'</p>');  
               document.getElementById("emAdmin").innerHTML = "Olá "+ user.email;           
               getAllSugestion();
+              return;
             }).catch(function(error) {
               console.log("Error upgrading anonymous account"+ error);
             });
         }
-
+        e.preventDefault();
+        e.stopImmediatePropagation();
     });
 
     //getAllSugestion();
@@ -230,7 +236,7 @@ window.onload = function () {
                 for(var i in comment){
                     var childData = comment[i];
                     html += '<dt> Nome: '+childData.name +' - Campus: '+childData.campus + '- Data criação: '+childData.date_created +'</dt>';
-                    html += '<dd>Comentário: '+childData.message+' </<dd>';
+                    html += '<dd style="color:black">Comentário: '+childData.message+' </<dd>';
                 };
                 commentsListUI.innerHTML = html;  
             }       
@@ -242,6 +248,79 @@ window.onload = function () {
     
         });
     }
+    var user = firebase.auth().currentUser;
+    console.log(user);
+    if (user != null) {
+        user.providerData.forEach(function(profile) {
+            console.log("  Sign-in provider: " + profile.providerId);
+            console.log("  Provider-specific UID: " + profile.uid);
+            console.log("  Name: " + profile.displayName);
+            console.log("  Email: " + profile.email);
+            console.log("  Photo URL: " + profile.photoURL);
+        });
+    }
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in.
+          var displayName = user.displayName;
+          var email = user.email;
+          var emailVerified = user.emailVerified;
+          var photoURL = user.photoURL;
+          var isAnonymous = user.isAnonymous;
+          var uid = user.uid;
+          console.log(displayName);
+          console.log(email);
+          console.log(emailVerified);
+          console.log(photoURL);
+          console.log(isAnonymous);
+          console.log(uid);
+          document.getElementById("btnExit").style.display = "";
+          document.getElementById("formAdmin").style.display = "none";
+         // UIkit.modal.dialog('<p style="font-size: 1.5rem;" class="uk-modal-body">Olá '+user.email+'</p>');  
+          document.getElementById("emAdmin").innerHTML = "Olá "+ user.email;           
+          getAllSugestion();
+          // ...
+        } else {
+          // User is signed out.
+          // ...
+        }
+      });
+
+    $(document).on("click", ".loginGoogleAdmin", function(e){
+        var provider = new firebase.auth.GoogleAuthProvider();
+        //firebase.auth().languageCode = 'pt';
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            console.log(result);
+            var token = result.credential.accessToken;
+            // The signed-in user info.  
+            var user = result.user;
+            console.log(user);
+        }).catch(function(error) {
+            console.log(error);
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+        });
+    });
+    
+    $(document).on("click", ".loginExit", function(e){
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            document.getElementById("btnExit").style.display = "none";
+            document.getElementById("formAdmin").style.display = "";
+            UIkit.modal.dialog('<p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Desconectado</p>'); 
+            document.getElementById("emAdmin").innerHTML = "Bem-vindo!"; 
+            document.getElementById("situationList").innerHTML = "";
+        }).catch(function(error) {
+            // An error happened.
+        });
+    });
 
 
 };
