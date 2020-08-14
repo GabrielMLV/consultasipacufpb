@@ -2,7 +2,10 @@ $(window).on('load', function () {
     $('#preloader .inner').fadeOut();
     $('#preloader').delay(350).fadeOut('slow'); 
     $('body').delay(350).css({'overflow': 'visible'});
-    
+
+    //window.location.href
+
+
     //localStorage.setItem('nome','Jack Sparrow22');
     const verifyLastSearch = localStorage.getItem('last_search');
     if(verifyLastSearch !== null){
@@ -10,76 +13,29 @@ $(window).on('load', function () {
     }else{
         document.getElementById("lastSearch").innerHTML = '<span style="font-size:13px;">Bem-vindo!</span>'
     }
-    var idAux = localStorage.getItem('id_auxilio');
-    if(idAux !== null){
-        insertLocalInfos();      
-        disabledBtnSarch();
+    
+    const queryString = window.location.search;
+    //console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    var idAuxilio = urlParams.get('id_auxilio');
+    //console.log(idAuxilio);
+   
+    if (idAuxilio == null || typeof idAuxilio == "undefined" || idAuxilio == ""){
+        var idAux = localStorage.getItem('id_auxilio');
+        if(idAux !== null){
+            insertLocalInfos();      
+            disabledBtnSarch();
+        }
+    }else{
+        const idCampus = urlParams.get('id_campus');   
+        getByLinkSearchWhats(idCampus, idAuxilio);
     }
+
+
+   
+
 })
 var loadSpinn = '<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>';
-var obj_default = [
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRAPE - COORDENAÇÃO DE ASSISTÊNCIA E PROMOÇÃO ESTUDANTIS (COAPE) (11.00.63.01)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRÓ-REITORIA DE ADMINISTRAÇÃO (PRA) (11.00.47)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - COORDENAÇÃO DE ADMINISTRAÇÃO (11.01.08.02)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - ASSESSORIA DE COORDENAÇÃO DE ADMINISTRAÇÃO (11.01.08.96)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRÓ-REITORIA DE ADMINISTRAÇÃO (PRA) (11.00.47)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - COORDENAÇÃO DE CONTABILIDADE E FINANÇAS (11.01.08.01)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - SEÇÃO ANÁLISE E CONTROLE (11.01.08.01.03.03)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - DIVISÃO DE CONTABILIDADE (11.01.08.01.03)",
-    },
-    {
-        "status_terminado": false,
-        "unidade_destino": "PRA - DIVISÃO DE ADMINISTRAÇÃO E FINANÇAS (11.01.08.01.02)",
-    },
-    {
-        "status_terminado": true,
-        "unidade_destino": "PRA - ARQUIVO DA DAF (11.01.08.01.02.02)",
-    }
-]
-
-var templateCountDown = `<div style="display: inline-flex;margin: 0px 0px 0px 0px !important;" class="uk-flex uk-flex-middle uk-flex-center uk-text-center uk-grid-small uk-child-width-auto uk-margin" uk-grid uk-countdown="date: {0}">
-<label style="padding-left: 1px;">Próxima consulta em </label>
-<div style="padding: 0px;">
-    <div class="uk-countdown-number uk-countdown-days" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
-</div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">d</div>
-<div style="padding: 0px;">
-    <div class="uk-countdown-number uk-countdown-hours" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
-</div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">h</div>
- <div style="padding: 0px;">
-    <div class="uk-countdown-number uk-countdown-minutes" style="padding: 0px 5px; font-size:1rem; font-weight: 900;"></div>	
-</div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">m</div>
-<div style="padding: 0px;">
-    <div class="uk-countdown-number uk-countdown-seconds" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>
-</div>
-<div class="uk-countdown-separator" style="font-size: 1rem;padding-left: 0px;">s</div>
-</div>`;
-
 $(function() {    
     moment.locale('pt-br');  
 /*     $(".my-rating").starRating({
@@ -108,8 +64,7 @@ $(function() {
 });
 
 $(document).on("change", "#select_campus", function(e){
-    const valueSel = this.value;
-    const valueSpl = valueSel.split("-");
+    const valueSpl = this.value;
     //console.log(valueSpl);
     document.getElementById("select_campus").blur();
     document.getElementById("select_auxilio").disabled = true;
@@ -117,7 +72,7 @@ $(document).on("change", "#select_campus", function(e){
     /* const dvAux = document.getElementById("divAuxi");
     dvAux.style.display = "";
     dvAux.classList.add("uk-animation-slide-bottom"); */  
-    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+valueSpl[0]+"/auxilios";
+    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+valueSpl+"/auxilios";
     //preloader
     document.getElementById("select_auxilio").innerHTML = '<option value="0" selected disabled>Procurando auxilios...</option>';
     getFunction(url, renderAuxilios, errorGetAuxilios);
@@ -147,7 +102,7 @@ function renderAuxilios(data){
     document.getElementById("select_auxilio").disabled = false;
     html += '<option value="0" selected disabled>Selecione o auxílio *</option>';
     for(var i = 0; i < dt.length; i++){
-        html += '<option value="'+dt[i].tipo_auxilio+'">'+dt[i].nome_visualizacao+'</option>';
+        html += '<option value="'+dt[i].id_auxilio+'">'+dt[i].nome_visualizacao+'</option>';
     }
     document.getElementById("select_auxilio").innerHTML = html.toString();
     setTimeout(function(){
@@ -175,7 +130,7 @@ $(document).on("click", ".send", function(e){
     var campus = document.getElementById("select_campus");
     const checkSaveInfo = document.getElementById("saveSearch");
     const aux = auxilio.value;
-    const camp = campus.value.split("-");
+    const camp = campus.value;
     if(auxilio.value == 0 || auxilio.value == null || typeof auxilio.value == "undefined"){
         auxilio.classList.add("uk-form-danger");
         setTimeout(function(){
@@ -193,7 +148,7 @@ $(document).on("click", ".send", function(e){
     }else{     
         document.getElementById("renderHtmlProcess").innerHTML = loadSpinn;
         //renderProcess(_dt)
-        var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?auxilio="+aux+"&campus="+camp[1];
+        var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?id_auxilio="+aux+"&id_campus="+camp;
         //console.log(urlProcess);
         if(checkSaveInfo.checked == true){
             localStorage.setItem('id_auxilio', aux);
@@ -292,6 +247,7 @@ function renderProcess(res) {
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
                 html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+                html += '<a href="" id="whatsapp-share-btt" class="whatsapp-share-button" rel="nofollow" target="_blank"></a>';
                 html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                 html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
                 html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
@@ -311,6 +267,7 @@ function renderProcess(res) {
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
                 html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+                html += '<a href="" id="whatsapp-share-btt" class="whatsapp-share-button" rel="nofollow" target="_blank"></a>';
                 html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                 html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
                 html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
@@ -355,37 +312,19 @@ function renderProcess(res) {
                     }
                 }
             }
-           /*  if(i > 0 && i < dt.length){
-                html += '<li class="timeline-milestone is-current">';
-            }
-            if(i == dt.length){
-                html += '<li class="timeline-milestone timeline-end">';
-            } */
-            //body
-
-            
-         /*    for(var x = 0; x < obj_default.length; x++){
-                var title2 = obj_default[pos_default+1].unidade_destino;          
-                html += '<div class="timeline-action">';
-                html += '<h2 class="title"><b>Tipo:</b> ' + title2 + ' - <b>Campus:</b> '+  +'</b></span></h2>';
-                html += '<span class="date"><b>Data de origem:</b> ' + dt.data_origem+ ' - <b>Recebido em:</b> '+ dt.recebido_em +'</span>';
-                html += '<div class="content">';
-                html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
-                html += '<hr style="margin-top: 3px; margin-bottom:3px;">';
-                html += '<b>Status:</b> '+dt.status == true ? "Terminado": "Em andamento";  
-                html += '</div>';
-                html += '</div>';
-                html += '</li>';
-            } */
-                     			                 																									  									  
-        //}
         html += '</ul>';
         html += '</article> '; 
         //is-future
          
     }
     document.getElementById("renderHtmlProcess").innerHTML = html;
-
+    setTimeout(function(){
+        const _id_campus = document.getElementById("select_campus").value;
+        const _id_auxilio = document.getElementById("select_auxilio").value;
+        const conteudo = encodeURIComponent("Veja o status do auxílio aqui:  " + window.location.href + "?&id_campus="+_id_campus+"&id_auxilio="+_id_auxilio);
+        //altera a URL do botão
+        document.getElementById("whatsapp-share-btt").href = "https://api.whatsapp.com/send?text=" + conteudo;
+    },350);
 }
 
 function saveLast(dt){
@@ -554,13 +493,19 @@ function insertLocalInfos(){
     const idAux = localStorage.getItem('id_auxilio');
     const idCampus = localStorage.getItem('id_campus');
     document.getElementById("saveSearch").checked = true;
-    const idCampusSplit = idCampus.split("-");
-    console.log(idCampus);
     document.getElementById('select_campus').value = idCampus;
-    console.log("Chamou infos");    
-    var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?auxilio="+idAux+"&campus="+idCampusSplit[1];
+    var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?id_auxilio="+idAux+"&id_campus="+idCampus;
     getFunction(urlProcess, renderProcess, errorGetProcess);
-    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+idCampusSplit[0]+"/auxilios";
+    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+idCampus+"/auxilios";
+    document.getElementById("select_auxilio").innerHTML = '<option value="0" selected disabled>Procurando auxilios...</option>';
+    getFunction(url, renderAuxilios, errorGetAuxilios);
+}
+
+function getByLinkSearchWhats(idC, idA){
+    document.getElementById('select_campus').value = idC;
+    var urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos?id_auxilio="+idA+"&id_campus="+idC;
+    getFunction(urlProcess, renderProcess, errorGetProcess);
+    const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+idC+"/auxilios";
     document.getElementById("select_auxilio").innerHTML = '<option value="0" selected disabled>Procurando auxilios...</option>';
     getFunction(url, renderAuxilios, errorGetAuxilios);
 }
