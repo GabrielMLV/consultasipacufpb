@@ -2,24 +2,16 @@ $(window).on('load', function () {
     $('#preloader .inner').fadeOut();
     $('#preloader').delay(350).fadeOut('slow'); 
     $('body').delay(350).css({'overflow': 'visible'});
-
-    //window.location.href
-
-
-    //localStorage.setItem('nome','Jack Sparrow22');
     const verifyLastSearch = localStorage.getItem('last_search');
     if(verifyLastSearch !== null){
         document.getElementById("lastSearch").innerHTML = verifyLastSearch;
     }else{
         document.getElementById("lastSearch").innerHTML = '<span style="font-size:13px;">Bem-vindo!</span>'
     }
-    
+ 
     const queryString = window.location.search;
-    //console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
-    var idAuxilio = urlParams.get('id_auxilio');
-    //console.log(idAuxilio);
-   
+    var idAuxilio = urlParams.get('id_auxilio');   
     if (idAuxilio == null || typeof idAuxilio == "undefined" || idAuxilio == ""){
         var idAux = localStorage.getItem('id_auxilio');
         if(idAux !== null){
@@ -81,7 +73,7 @@ $(document).on("change", "#select_campus", function(e){
 });
 
   $(document).on("change", "#select_auxilio", function(e){   
-    disabledBtnSarch()
+    disabledBtnSarch();
 
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -208,6 +200,7 @@ function updateProgress(evt) {
 }
 
 
+
 function renderProcess(res) {
     closeLoader();
     document.getElementById("idSpinnSend").style.display = "none";
@@ -218,6 +211,7 @@ function renderProcess(res) {
     var dt = resPars.response.body;
     document.getElementById("renderHtmlProcess").innerHTML = "";
     var html = "";
+    var choicesProcess = "";
     document.getElementById("goToDown").click(); 
     if (dt == "" || typeof dt == "undefined" || dt == null ) {
         var rp = Math.floor((Math.random() * 4) + 1);
@@ -226,6 +220,25 @@ function renderProcess(res) {
         //saveLast(dt);
     } else { 
         saveLast(dt);
+        //console.log(dt);
+        choicesProcess = `
+        <div class="uk-margin-medium-top" style="margin-top: 30px!important;">
+        
+        <ul uk-tab class="uk-flex-center" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+            <li><a style="font-size:1rem; padding: 10px 0px;" id="idOldProcess" class="clickOldProcess" href="#">Mês passado</a></li>
+            <li class="uk-active"><a style="font-size:1rem; padding: 10px 0px;" href="#">Processo atual</a></li>
+        </ul>		
+        <ul class="uk-switcher uk-margin">
+            <li id="renderProcessOld" >
+                <span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+            </li>
+            <li id="renderProcessActual">              
+            </li>
+        </ul> 
+        </div>  
+        `;
+        document.getElementById("renderHtmlProcess").innerHTML = choicesProcess.toString();
+
         const t1 = moment(dt.proxima_atualizacao_em).format();
         //const t2 = moment(t1).add(1, 'hour');   
         //console.log(t1);
@@ -234,11 +247,12 @@ function renderProcess(res) {
         //document.getElementById("countRef").style.display = "";
         const respCount = templateCountDown.replace("{0}", resultDateFormat);	                  
         html += '<article style="margin-top: 20px;" class="page">';
-        html += '<h1 class="uk-heading-bullet" style="color: #5f338a; margin-bottom:10px"><span>Resultado</span></h1>';
-        html += '<h4 style="margin-top:5px;margin-bottom:0px;">Processo referente a <strong>'+dt.mes_referente+'</strong></h4>';
-        html += '<h4 style="margin-top:0px;margin-bottom:0px;">Última consulta aos processos do SIPAC em <strong>'+ moment(dt.atualizado_em).format('LLL') +'</strong>. </h4>';
-        html += '<h5 style="margin-top:0px;margin-bottom:10px;">'+respCount+'</h5>';
+        html += '<h2 class="uk-text-center" style="color: #5f338a; margin-bottom:10px; font-weight: bold;"><span>Resultado</span></h2>';
+        html += '<h4 style="margin-top:5px;margin-bottom:0px;">Processo referente a <strong>'+dt.mes_referente+'</strong>. Última consulta aos processos do SIPAC em <strong>'+ moment(dt.atualizado_em).format('LLL') +'</strong>.</h4>';
+        //html += '<h4 style="margin-top:0px;margin-bottom:0px;"> </h4>';
+        html += '<h5 style="margin-top:20px;margin-bottom:0px; text-align: right;">'+respCount+'</h5>';
         html += '<ul class="timeline">';
+      
        // for(var i = 0; i < dt.length; i++){ 
 
             var status = "";	
@@ -263,7 +277,7 @@ function renderProcess(res) {
                 html += '</div>';
                 html += '</li>';     
             }else{
-                status = "<span style='color:#1e87f0'><strong>EM ANDAMENTO</strong></span>"
+                status = "<span style='color:#1e87f0'><strong>EM ANDAMENTO</strong></span>";
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
                 html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
@@ -317,7 +331,7 @@ function renderProcess(res) {
         //is-future
          
     }
-    document.getElementById("renderHtmlProcess").innerHTML = html;
+    document.getElementById("renderProcessActual").innerHTML = html;
     setTimeout(function(){
         const _id_campus = document.getElementById("select_campus").value;
         const _id_auxilio = document.getElementById("select_auxilio").value;
@@ -326,6 +340,35 @@ function renderProcess(res) {
         document.getElementById("whatsapp-share-btt").href = "https://api.whatsapp.com/send?text=" + conteudo;
     },350);
 }
+
+$(document).on("click", ".clickOldProcess", function(e){
+    //console.log("clickou")
+    const aux = document.getElementById("select_auxilio");
+    const camp = document.getElementById("select_campus");
+    if(aux.value == 0 || aux.value == null || typeof aux.value == "undefined"){
+        aux.focus();
+        aux.classList.add("uk-form-danger");
+        setTimeout(function(){
+            aux.classList.remove("uk-form-danger"); 
+        },3000);
+        UIkit.notification({ message: 'Necessário selecionar o auxílio para consultar.', status: 'danger' });
+        return;
+    }else if(camp.value == 0 || camp.value == null || typeof camp.value == "undefined"){
+        camp.focus();
+        camp.classList.add("uk-form-danger");
+        setTimeout(function(){
+            camp.classList.remove("uk-form-danger"); 
+        },3000);
+        UIkit.notification({ message: 'Necessário selecionar o campus para consultar.', status: 'danger' });
+        return;
+    }else{
+        const urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos-anteriores?id_auxilio="+aux.value+"&id_campus="+camp.value;
+        getFunction(urlProcess, renderProcessOld, errorGetProcess); 
+    }
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+});
 
 function saveLast(dt){
     var typeAux = dt.tipo_auxilio.split("_").join(' ');
@@ -340,6 +383,43 @@ function errorGetProcess(_status) {
     document.getElementById("idBtnSend").style.display = "";
     UIkit.notification({ message: 'Oops: ' + _status, status: 'danger' });
     return;
+}
+
+function renderProcessOld(res){
+    var resPars = JSON.parse(res);
+    //console.log(resPars);
+    var dt = resPars.response.body;
+    var html = "";
+    if (dt == "" || typeof dt == "undefined" || dt == null ) {
+        html += "<div class='classNoFound' style='text-align:center; margin-top:25px;'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
+    }else{
+        html += '<article style="margin-top: 20px;" class="page">';
+        html += '<h2 class="uk-heading-bullet" style="color: #5f338a; margin-bottom:10px;font-weight: bold;"><span>Resultado</span></h2>';
+        html += '<h4 style="margin-top:5px;margin-bottom:0px;">Processo referente a <strong>'+dt.mes_referente+'</strong></h4>';
+        html += '<ul class="timeline">';
+        status = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
+        html += '<li class="timeline-milestone is-completed timeline-start">'; 
+        var title = dt.tipo_processo.split("_").join(' ');
+        html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+        html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
+        html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
+        html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
+        html += '<div class="content">';
+        html += '<b>Mês referênte:</b> '+dt.mes_referente;
+        html += '</div>';
+        html += '<div class="content">';
+        html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
+        html += '</div>';
+        html += '</div>';
+        html += '</li>';    
+        html += '</ul>';
+        html += '</article> ';  
+        
+        const idOldProcess = document.getElementById("idOldProcess");
+        idOldProcess.classList.remove("clickOldProcess"); 
+
+    }
+    document.getElementById("renderProcessOld").innerHTML = html;
 }
 
 
@@ -403,7 +483,7 @@ $(document).on("click", ".sendSugestion", function(e){
         UIkit.notification({ message: '<span uk-icon="icon: close"></span> É necessário preencher a mensagem.', status: 'danger' });
         return;
     }else{
-        sendSugestion(name_opt.value, campus_opt.value, description_opt.value)
+        sendSugestion(name_opt.value, campus_opt.value, description_opt.value);
     }
 
 });

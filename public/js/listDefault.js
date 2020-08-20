@@ -41,7 +41,7 @@ var obj_default = [
     }
 ]
 
-var templateCountDown = `<div style="display: inline-flex;margin: 0px 0px 0px 0px !important;" class="uk-flex uk-flex-middle uk-flex-center uk-text-center uk-grid-small uk-child-width-auto uk-margin" uk-grid uk-countdown="date: {0}">
+var templateCountDown = `<div style="display: inline-flex;margin: 0px 0px 0px 0px !important;" class="uk-text-meta uk-text-emphasis uk-text-italic uk-flex uk-flex-middle uk-flex-center uk-text-center uk-grid-small uk-child-width-auto uk-margin" uk-grid uk-countdown="date: {0}">
 <label style="padding-left: 1px;">Próxima consulta em </label>
 <div style="padding: 0px;">
     <div class="uk-countdown-number uk-countdown-days" style="padding: 0px 5px; font-size: 1rem; font-weight: 900;"></div>

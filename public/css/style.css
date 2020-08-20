@@ -261,6 +261,11 @@ body {
 
 }
 
+.styleBody{
+  background-image: url("../images/agility2.png");
+  background-color: #cccccc;
+}
+
 body {
 	background-color: #fff;
   background-image: linear-gradient(180deg, #fff 0%, #b582e9 100%);
@@ -388,3 +393,14 @@ body {
   } 
 }
 /* end: Preloader */
+
+
+.uk-tab>.uk-active>a {
+  color: #5f338a !important;
+  border-color: #5f338a !important;
+  font-weight: 900 !important;
+}
+
+.uk-tab::before {
+  border-bottom: 1px solid #e4d2f7 !important;
+}

@@ -18,13 +18,27 @@ window.onload = function () {
     const dbRef = firebase.database().ref();
     const commentsRef = dbRef.child('comments');
     const visitRef = dbRef.child('visits');
+   // const manutentionRef = dbRef.child('manutention');
     //console.log(Date.now())
     var url_atual = window.location.href;
     var urlp = url_atual.split("///");
     if(urlp[0] == "file:"){
-        console.log("Local");
+        //console.log("Local");     
+        //window.location.href
+/*         var inManutention = false;
+        manutentionRef.on("value", snap => {
+            console.log(snap.val());
+            inManutention = snap.val();
+            if(inManutention == true){
+                callManutention();         
+            }else{
+                //callNormalPage();
+                const queryString = window.location.href;
+                console.log(queryString);
+            }
+        }); */
     }else{   
-        console.log("Remote")
+        //console.log("Remote");
         setTimeout(function(){  
             var _date = moment().format('L') + " "+ moment().format('LTS');
             setTimeout(function(){
@@ -97,3 +111,12 @@ $(document).on("click", ".loginGoogle", function(e){
         // ...
     });
 });
+
+
+function callManutention(){
+    window.location.href = "file:///C:/Users/Gabriel%20M/Documents/Consultas%20SIPAC/consultasipacufpb/public/manutencao.html";
+}
+
+function callNormalPage(){
+    window.location.href = "file:///C:/Users/Gabriel%20M/Documents/Consultas%20SIPAC/consultasipacufpb/public/index.html";
+}
