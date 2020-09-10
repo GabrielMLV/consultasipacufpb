@@ -2,6 +2,7 @@ $(window).on('load', function () {
     $('#preloader .inner').fadeOut();
     $('#preloader').delay(350).fadeOut('slow'); 
     $('body').delay(350).css({'overflow': 'visible'});
+
     const verifyLastSearch = localStorage.getItem('last_search');
     if(verifyLastSearch !== null){
         document.getElementById("lastSearch").innerHTML = verifyLastSearch;
@@ -27,7 +28,7 @@ $(window).on('load', function () {
    
 
 })
-var loadSpinn = '<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>';
+var loadSpinn = '<span class="uk-flex uk-flex-center" style="color: #5f338a;" uk-spinner="ratio: 4.5"></span>';
 $(function() {    
     moment.locale('pt-br');  
 /*     $(".my-rating").starRating({
@@ -61,8 +62,8 @@ $(document).on("change", "#select_campus", function(e){
     document.getElementById("select_campus").blur();
     document.getElementById("select_auxilio").disabled = true;
     document.getElementById("idBtnSend").disabled = true; 
-    /* const dvAux = document.getElementById("divAuxi");
-    dvAux.style.display = "";
+    document.getElementById("spinBtn").style.display = "";
+    /*dvAux.style.display = "";
     dvAux.classList.add("uk-animation-slide-bottom"); */  
     const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+valueSpl+"/auxilios";
     //preloader
@@ -87,6 +88,7 @@ function disabledBtnSarch(){
 
 function renderAuxilios(data){
     //console.log(data);
+    document.getElementById("spinBtn").style.display = "none";
     var dataParse = JSON.parse(data);
     //console.log(dataParse);
     var dt = dataParse.response.body;
@@ -107,7 +109,7 @@ function renderAuxilios(data){
 
 function errorGetAuxilios(_status){
     //console.log(_status);
-    document.getElementById("idSpinnSend").style.display = "none";
+    //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
     UIkit.notification({ message: 'Oops! Aconteceu alguma coisa na busca dos auxílios :(  ' + _status, status: 'danger' });
     return;
@@ -116,7 +118,7 @@ function errorGetAuxilios(_status){
 
 $(document).on("click", ".send", function(e){
     //console.log("Click send");
-    document.getElementById("idSpinnSend").style.display = "";
+    //document.getElementById("idSpinnSend").style.display = "";
     document.getElementById("idBtnSend").style.display = "none";
     var auxilio = document.getElementById("select_auxilio");
     var campus = document.getElementById("select_campus");
@@ -167,9 +169,21 @@ function getFunction(urlProcess, cbSuccess, cbError) {
             //console.log(xmlHttp.responseText);
             cbSuccess(xmlHttp.responseText);
         } else if (xmlHttp.status == 500) {
-            cbError(xmlHttp.status);
+            console.log(xmlHttp.status);
+            closeLoader();
+            const _status = xmlHttp.status;
+            //document.getElementById("idSpinnSend").style.display = "none";
+            document.getElementById("idBtnSend").style.display = "";
+            UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            return;
         } else if (xmlHttp.status == 404) {
-            cbError(xmlHttp.status);
+            console.log(xmlHttp.status);
+            closeLoader();
+            const _status = xmlHttp.status;
+            //document.getElementById("idSpinnSend").style.display = "none";
+            document.getElementById("idBtnSend").style.display = "";
+            UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            return;
         }
 
     }
@@ -183,9 +197,14 @@ function getFunction(urlProcess, cbSuccess, cbError) {
 
 
     xmlHttp.onerror = function (status) {
-        alert("Request failed: " + status);
-        document.getElementById("idSpinnSend").style.display = "none";
+        console.log(status);
+        closeLoader();
+        const _status = status;
+        //document.getElementById("idSpinnSend").style.display = "none";
         document.getElementById("idBtnSend").style.display = "";
+        UIkit.modal.alert('<p>Oops! Request failed. Status: '+_status+'</p>');
+        return;
+
     };
 }
 
@@ -203,7 +222,7 @@ function updateProgress(evt) {
 
 function renderProcess(res) {
     closeLoader();
-    document.getElementById("idSpinnSend").style.display = "none";
+    //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
     moment.locale('pt-br'); 
     var resPars = JSON.parse(res);
@@ -230,7 +249,7 @@ function renderProcess(res) {
         </ul>		
         <ul class="uk-switcher uk-margin">
             <li id="renderProcessOld" >
-                <span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+                <span class="uk-flex uk-flex-center" style="color: #5f338a;" uk-spinner="ratio: 4.5"></span>
             </li>
             <li id="renderProcessActual">              
             </li>
@@ -379,7 +398,7 @@ function saveLast(dt){
 
 function errorGetProcess(_status) {
     closeLoader();
-    document.getElementById("idSpinnSend").style.display = "none";
+    //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
     UIkit.notification({ message: 'Oops: ' + _status, status: 'danger' });
     return;

@@ -90,12 +90,14 @@
 											</select>
 										</div>
 									</div>
-
+									<div class="uk-text-center">
+										<span style="display: none; color: #5f338a;" class="uk-text-center" id="spinBtn" uk-spinner="ratio: 1"></span>
+									</div>
 									<div id="divAuxi" class="uk-margin">
 										<!-- <label class="uk-form-label" for="select_auxilio">Auxílio <b style="color:red">*</b></label> -->
 										<div class="uk-form-controls">
 											<select disabled class="uk-select styleSelect" id="select_auxilio">
-												<option value="0" disabled>Necessário selecionar o campus.</option>	
+												<option value="0" disabled selected>Necessário selecionar o campus.</option>	
 											</select>
 										</div>
 									</div>	
@@ -107,9 +109,9 @@
 							<div class="uk-width-auto@m"></div>
 							<div class="uk-width-1-2@m">
 								<div class="uk-margin">
-									<div id="idSpinnSend" uk-spinner style="display: none;"></div>
+<!-- 									<div id="idSpinnSend" uk-spinner style="display: none;  color: #5f338a;"></div>-->
 									<button id="idBtnSend" disabled style="height: 55px; border-radius: 35px;background-color: #e8dbf5 !important; color:white;" class="styleBtn uk-button uk-width-1-1 uk-button-primary send">
-										Consultar <span uk-icon="icon: search; ratio: 0.8"></span>
+										Consultar  <span uk-icon="icon: search; ratio: 1"></span>
 									</button>
 									<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
 										<label><input class="uk-checkbox" id="saveSearch" type="checkbox"> Salvar informações de pesquisa</label>
@@ -176,7 +178,7 @@
 			
 
 			<div id="commentsList" style="display: none;">
-				<span class="uk-flex uk-flex-center" uk-spinner="ratio: 4.5"></span>
+				<span class="uk-flex uk-flex-center" style=" color: #5f338a;" uk-spinner="ratio: 4.5"></span>
 			</div>
 			
 			<div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid uk-height-match="target: > div > .uk-card">
