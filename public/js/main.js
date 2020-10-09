@@ -9,7 +9,7 @@ $(window).on('load', function () {
     }else{
         document.getElementById("lastSearch").innerHTML = '<span style="font-size:13px;">Bem-vindo!</span>'
     }
- 
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     var idAuxilio = urlParams.get('id_auxilio');   
@@ -111,7 +111,12 @@ function errorGetAuxilios(_status){
     //console.log(_status);
     //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
-    UIkit.notification({ message: 'Oops! Aconteceu alguma coisa na busca dos auxílios :(  ' + _status, status: 'danger' });
+    Swal.fire({
+        position: 'top',
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Aconteceu algum erro na busca dos auxílios. Status: '+_status
+    })
     return;
 }
 
@@ -130,14 +135,24 @@ $(document).on("click", ".send", function(e){
         setTimeout(function(){
             auxilio.classList.remove("uk-form-danger"); 
         },3000)
-        UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o tipo de auxílio.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Selecione o tipo de auxílio.'
+        })
+        //UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o tipo de auxílio.', status: 'danger' });
         return;
     }else if(campus.value == 0 || campus.value == null || typeof campus.value == "undefined"){
         campus.classList.add("uk-form-danger");
         setTimeout(function(){
             campus.classList.remove("uk-form-danger"); 
         },3000)
-        UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o campus.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Selecione o campus.'
+        })
+        //UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o campus.', status: 'danger' });
         return;
     }else{     
         document.getElementById("renderHtmlProcess").innerHTML = loadSpinn;
@@ -174,7 +189,13 @@ function getFunction(urlProcess, cbSuccess, cbError) {
             const _status = xmlHttp.status;
             //document.getElementById("idSpinnSend").style.display = "none";
             document.getElementById("idBtnSend").style.display = "";
-            UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            //UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Algo deu errado. Status:' +_status
+            })
             return;
         } else if (xmlHttp.status == 404) {
             console.log(xmlHttp.status);
@@ -182,7 +203,13 @@ function getFunction(urlProcess, cbSuccess, cbError) {
             const _status = xmlHttp.status;
             //document.getElementById("idSpinnSend").style.display = "none";
             document.getElementById("idBtnSend").style.display = "";
-            UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Request failed. Status:' +_status
+            })
+            //UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
             return;
         }
 
@@ -202,7 +229,13 @@ function getFunction(urlProcess, cbSuccess, cbError) {
         const _status = status;
         //document.getElementById("idSpinnSend").style.display = "none";
         document.getElementById("idBtnSend").style.display = "";
-        UIkit.modal.alert('<p>Oops! Request failed. Status: '+_status+'</p>');
+        Swal.fire({
+            position: 'top',
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Request failed. Status:' +_status
+        })
+        //UIkit.modal.alert('<p>Oops! Request failed. Status: '+_status+'</p>');
         return;
 
     };
@@ -370,7 +403,13 @@ $(document).on("click", ".clickOldProcess", function(e){
         setTimeout(function(){
             aux.classList.remove("uk-form-danger"); 
         },3000);
-        UIkit.notification({ message: 'Necessário selecionar o auxílio para consultar.', status: 'danger' });
+        //UIkit.notification({ message: 'Necessário selecionar o auxílio para consultar.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Necessário selecionar o auxílio para consultar.'
+        })
         return;
     }else if(camp.value == 0 || camp.value == null || typeof camp.value == "undefined"){
         camp.focus();
@@ -378,7 +417,13 @@ $(document).on("click", ".clickOldProcess", function(e){
         setTimeout(function(){
             camp.classList.remove("uk-form-danger"); 
         },3000);
-        UIkit.notification({ message: 'Necessário selecionar o campus para consultar.', status: 'danger' });
+        //UIkit.notification({ message: 'Necessário selecionar o campus para consultar.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Necessário selecionar o campus para consultar.'
+        })
         return;
     }else{
         const urlProcess = "https://consultaprocessosipac.herokuapp.com/api/v1/processos-anteriores?id_auxilio="+aux.value+"&id_campus="+camp.value;
@@ -400,7 +445,11 @@ function errorGetProcess(_status) {
     closeLoader();
     //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
-    UIkit.notification({ message: 'Oops: ' + _status, status: 'danger' });
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error: '+_status
+    })
     return;
 }
 
@@ -492,14 +541,25 @@ $(document).on("click", ".sendSugestion", function(e){
         setTimeout(function(){
             campus_opt.classList.remove("uk-form-danger"); 
         },3000)
-        UIkit.notification({ message: '<span uk-icon="icon: close"></span> Selecione o seu campus.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Selecione o seu campus.'
+        })
         return;
     }else if(description_opt.value.trim() == "" || description_opt.value.length == 0){
         description_opt.classList.add("uk-form-danger");
         setTimeout(function(){
         description_opt.classList.remove("uk-form-danger"); 
         },3000)
-        UIkit.notification({ message: '<span uk-icon="icon: close"></span> É necessário preencher a mensagem.', status: 'danger' });
+        Swal.fire({
+            position: 'top',
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'É necessário preencher a mensagem.'
+        })
+        //UIkit.notification({ message: '<span uk-icon="icon: close"></span> ', status: 'danger' });
         return;
     }else{
         sendSugestion(name_opt.value, campus_opt.value, description_opt.value);
@@ -520,15 +580,27 @@ function sendSugestion(name, campus, description){
     }, function(error) {
         if (error) {
           // The write failed...
-          UIkit.notification({ message: '<span uk-icon="icon: close"></span> Oops! Algum erro aconteceu no envio da mensagem :/.', status: 'danger' });
-        return;
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Algum erro aconteceu no envio da mensagem'
+            })
+            return;
         } else {
         // Data saved successfully!
           document.getElementById("name_opt").value = "";
           document.getElementById("select_campus_form").value = 0;
           document.getElementById("select_textearea_form").value = ""; 
           var rp = Math.floor((Math.random() * 4) + 1);
-          UIkit.modal.dialog('<div style="text-align:center"><img src="images/gato'+rp+'.png" style="width: 140px; height: 140px;margin-top: 15px;"/> <p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Obrigado por ajudar com o crescimento do sitema!</p></div>');
+          Swal.fire({
+            icon: 'success',
+            title: 'Sucesso',
+            text: 'Obrigado por ajudar com o crescimento do sitema!',
+            showConfirmButton: false,
+            timer: 3500
+          })
+          //UIkit.modal.dialog('<div style="text-align:center"><img src="images/gato'+rp+'.png" style="width: 140px; height: 140px;margin-top: 15px;"/> <p style="font-size: 1.5rem; padding-top: 0px; margin-top: 0px;" class="uk-modal-body">Obrigado por ajudar com o crescimento do sitema!</p></div>');
         }
     });
     
