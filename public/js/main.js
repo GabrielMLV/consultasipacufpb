@@ -23,48 +23,21 @@ $(window).on('load', function () {
         const idCampus = urlParams.get('id_campus');   
         getByLinkSearchWhats(idCampus, idAuxilio);
     }
-
-
-   
-
+    var now = new Date();
+    document.getElementById("yearId").innerHTML = now.getFullYear();
 })
 var loadSpinn = '<span class="uk-flex uk-flex-center" style="color: #5f338a;" uk-spinner="ratio: 4.5"></span>';
 $(function() {    
     moment.locale('pt-br');  
-/*     $(".my-rating").starRating({
-        totalStars: 5,
-        emptyColor: 'lightgray',
-        hoverColor: '#5f338a',
-        activeColor: '#5f338a',
-        strokeColor: "black",
-        ratedColor: "#5f338a",
-        initialRating: 4,
-        strokeWidth: 10,
-        useGradient: false,
-        disableAfterRate: false,
-        callback: function(currentRating, $el){
-            // make a server call here
-            console.log('rated ' + currentRating);
-            console.log('DOM element ', $el);
-        },
-        onHover: function(currentIndex, currentRating, $el){
-            $('.live-rating').text(currentIndex);
-          },
-          onLeave: function(currentIndex, currentRating, $el){
-            $('.live-rating').text(currentRating);
-          }
-    }); */
 });
 
 $(document).on("change", "#select_campus", function(e){
     const valueSpl = this.value;
-    //console.log(valueSpl);
     document.getElementById("select_campus").blur();
     document.getElementById("select_auxilio").disabled = true;
     document.getElementById("idBtnSend").disabled = true; 
     document.getElementById("spinBtn").style.display = "";
-    /*dvAux.style.display = "";
-    dvAux.classList.add("uk-animation-slide-bottom"); */  
+
     const url = "https://consultaprocessosipac.herokuapp.com/api/v1/campus/"+valueSpl+"/auxilios";
     //preloader
     document.getElementById("select_auxilio").innerHTML = '<option value="0" selected disabled>Procurando auxilios...</option>';
@@ -87,10 +60,8 @@ function disabledBtnSarch(){
 }
 
 function renderAuxilios(data){
-    //console.log(data);
     document.getElementById("spinBtn").style.display = "none";
     var dataParse = JSON.parse(data);
-    //console.log(dataParse);
     var dt = dataParse.response.body;
     var html = "";
     document.getElementById("select_auxilio").disabled = false;
@@ -108,8 +79,6 @@ function renderAuxilios(data){
 }
 
 function errorGetAuxilios(_status){
-    //console.log(_status);
-    //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
     Swal.fire({
         position: 'top',
@@ -120,10 +89,7 @@ function errorGetAuxilios(_status){
     return;
 }
 
-
 $(document).on("click", ".send", function(e){
-    //console.log("Click send");
-    //document.getElementById("idSpinnSend").style.display = "";
     document.getElementById("idBtnSend").style.display = "none";
     var auxilio = document.getElementById("select_auxilio");
     var campus = document.getElementById("select_campus");
@@ -167,26 +133,34 @@ $(document).on("click", ".send", function(e){
             localStorage.removeItem('id_campus');
         }
         openLoader();
-        getFunction(urlProcess, renderProcess, errorGetProcess);
+        getFunction(urlProcess, renderProcess, errorCb);
     }
 
     e.preventDefault();
     e.stopImmediatePropagation();
-})
+});
+
+function errorCb(){
+    var rp = Math.floor((Math.random() * 4) + 1);
+    document.getElementById("renderHtmlProcess").innerHTML = "";
+    html += "<div class='classNoFound' style='text-align:center; margin-top:25px;'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
+    document.getElementById("renderProcessActual").innerHTML = html;
+}
 
 function getFunction(urlProcess, cbSuccess, cbError) {
 
     var xmlHttp = new XMLHttpRequest();
     var theUrl = urlProcess;
 
-    xmlHttp.onreadystatechange = function () {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-            //console.log(xmlHttp.responseText);
-            cbSuccess(xmlHttp.responseText);
-        } else if (xmlHttp.status == 500) {
-            console.log(xmlHttp.status);
+    xmlHttp.onload = function (response) {
+        var status = response.target.status;
+        if (status === 200) {
+            cbSuccess(response.target.responseText);
+            return;
+        } else if (status === 500) {
+            console.log(status);
             closeLoader();
-            const _status = xmlHttp.status;
+            const _status = status;
             //document.getElementById("idSpinnSend").style.display = "none";
             document.getElementById("idBtnSend").style.display = "";
             //UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
@@ -195,12 +169,14 @@ function getFunction(urlProcess, cbSuccess, cbError) {
                 icon: 'error',
                 title: 'Oops!',
                 text: 'Algo deu errado. Status:' +_status
-            })
+            });
+            cbError();
             return;
-        } else if (xmlHttp.status == 404) {
-            console.log(xmlHttp.status);
+        } else if (status === 404) {
+            
+            console.log(status);
             closeLoader();
-            const _status = xmlHttp.status;
+            const _status = status;
             //document.getElementById("idSpinnSend").style.display = "none";
             document.getElementById("idBtnSend").style.display = "";
             Swal.fire({
@@ -208,25 +184,39 @@ function getFunction(urlProcess, cbSuccess, cbError) {
                 icon: 'error',
                 title: 'Oops!',
                 text: 'Request failed. Status:' +_status
-            })
+            });
+            cbError();
             //UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            return;
+        }else {
+            console.log(status);
+            closeLoader();
+            const _status = status;
+            //document.getElementById("idSpinnSend").style.display = "none";
+            document.getElementById("idBtnSend").style.display = "";
+            //UIkit.modal.alert('<p>Oops! Algo deu errado. Status: '+_status+'</p>');
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Algo deu errado. Status:' +_status
+            });
+            cbError();
             return;
         }
 
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
-    //xmlHttp.timeout = 15000;
+    //xmlHttp.timeout = 2000;
     xmlHttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     xmlHttp.getResponseHeader('Content-Type');
     //xmlHttp.onprogress = updateProgress;
     xmlHttp.send(null);
 
-
-
     xmlHttp.onerror = function (status) {
-        console.log(status);
+        console.log(xmlHttp.statusText);
         closeLoader();
-        const _status = status;
+        const _status = xmlHttp.statusText;
         //document.getElementById("idSpinnSend").style.display = "none";
         document.getElementById("idBtnSend").style.display = "";
         Swal.fire({
@@ -259,20 +249,16 @@ function renderProcess(res) {
     document.getElementById("idBtnSend").style.display = "";
     moment.locale('pt-br'); 
     var resPars = JSON.parse(res);
-    //console.log(resPars);
     var dt = resPars.response.body;
     document.getElementById("renderHtmlProcess").innerHTML = "";
     var html = "";
     var choicesProcess = "";
     document.getElementById("goToDown").click(); 
-    if (dt == "" || typeof dt == "undefined" || dt == null ) {
+    if (dt == "" || typeof dt == "undefined" || dt == null || !dt) {
         var rp = Math.floor((Math.random() * 4) + 1);
         html += "<div class='classNoFound' style='text-align:center; margin-top:25px;'><img src='images/gato"+rp+".png' style='width: 140px; height: 140px;'/><h2 style='margin-top: 0px; margin-bottom: 0px;'>Oops!</h2><p style='font-size:1.5rem;margin-top: 0px;'>O processo requisitado não foi encontrado, tente novamente mais tarde.</p></div>";
-        //errorGetProcess("Nenhum processo encontrado, tente novamente mais tarde.");
-        //saveLast(dt);
     } else { 
         saveLast(dt);
-        //console.log(dt);
         choicesProcess = `
         <div class="uk-margin-medium-top" style="margin-top: 30px!important;">
         
@@ -292,27 +278,21 @@ function renderProcess(res) {
         document.getElementById("renderHtmlProcess").innerHTML = choicesProcess.toString();
 
         const t1 = moment(dt.proxima_atualizacao_em).format();
-        //const t2 = moment(t1).add(1, 'hour');   
-        //console.log(t1);
         const resultDateFormat = (t1);
-        //UIkit.countdown("#countRef", {date: resultDateFormat});
-        //document.getElementById("countRef").style.display = "";
         const respCount = templateCountDown.replace("{0}", resultDateFormat);	                  
         html += '<article style="margin-top: 20px;" class="page">';
-        html += '<h2 class="uk-text-center" style="color: #5f338a; margin-bottom:10px; font-weight: bold;"><span>Resultado</span></h2>';
+        html += '<h2 class="uk-heading-bullet" style="color: #5f338a; margin-bottom:10px; font-weight: bold;"><span>Resultado</span></h2>';
         html += '<h4 style="margin-top:5px;margin-bottom:0px;">Processo referente a <strong>'+dt.mes_referente+'</strong>. Última consulta aos processos do SIPAC em <strong>'+ moment(dt.atualizado_em).format('LLL') +'</strong>.</h4>';
-        //html += '<h4 style="margin-top:0px;margin-bottom:0px;"> </h4>';
         html += '<h5 style="margin-top:20px;margin-bottom:0px; text-align: right;">'+respCount+'</h5>';
         html += '<ul class="timeline">';
       
-       // for(var i = 0; i < dt.length; i++){ 
 
             var status = "";	
             if(dt.status_terminado == true){
                 status = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
-                html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+                html += '<div class="timeline-action">';
                 html += '<a href="" id="whatsapp-share-btt" class="whatsapp-share-button" rel="nofollow" target="_blank"></a>';
                 html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                 html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
@@ -321,7 +301,7 @@ function renderProcess(res) {
                 html += '<b>Unidade de destino:</b> '+dt.unidade_destino;
                 html += '</div>';
                 html += '<div class="content">';
-                html += '<b>Última movimentação em:</b>'+dt.recebido_em;
+                html += '<b>Última movimentação em:</b> '+dt.recebido_em;
                 html += '</div>';
                 html += '<div class="content">';
                 html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
@@ -332,7 +312,7 @@ function renderProcess(res) {
                 status = "<span style='color:#1e87f0'><strong>EM ANDAMENTO</strong></span>";
                 html += '<li class="timeline-milestone is-completed timeline-start">'; 
                 var title = dt.tipo_auxilio.split("_").join(' ');
-                html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+                html += '<div class="timeline-action">';
                 html += '<a href="" id="whatsapp-share-btt" class="whatsapp-share-button" rel="nofollow" target="_blank"></a>';
                 html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                 html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
@@ -341,18 +321,15 @@ function renderProcess(res) {
                 html += '<b>Unidade de destino:</b> '+dt.unidade_destino;  
                 html += '</div>';
                 html += '<div class="content">';
-                html += '<b>Última movimentação em:</b>'+dt.recebido_em;
+                html += '<b>Última movimentação em:</b> '+dt.recebido_em;
                 html += '</div>';
                 html += '<div class="content">';
                 html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
                 html += '</div>';
                 html += '</div>';
                 html += '</li>'; 
-                //console.log(dt.unidade_destino);
                 for(var i = 0; i < obj_default.length; i++){
-                    //console.log(obj_default[i].unidade_destino);                   
                     if(dt.unidade_destino.trim() == obj_default[i].unidade_destino.trim()){
-                        //console.log("Entrou aqui")
                         for(var x = i+1; x < obj_default.length; x++){
                             var stats = "";
                             if(x == obj_default.length){
@@ -362,7 +339,7 @@ function renderProcess(res) {
                                 stats = "<span style='color:#5858588f'><strong>AGUARDANDO</strong></span>";   
                                 html += '<li class="timeline-milestone is-future">'; 
                             }
-                            html += '<div class="timeline-action" style="border-top: 3px solid #b5b5b5; background: #f3f3f3ab; -webkit-box-shadow: 0px 0px 0px 0px #fff; box-shadow: 0px 0px 0px 0px #fff;">';
+                            html += '<div class="timeline-action" style="background: #f3f3f3ab; -webkit-box-shadow: 0px 0px 0px 0px #fff; box-shadow: 0px 0px 0px 0px #fff;">';
                             html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
                             html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
                             html += '<span class="date"><b>Status:</b> ' + stats  + '</span>';
@@ -370,7 +347,6 @@ function renderProcess(res) {
                             html += '<b>Próxima unidade:</b> <span style="color:#4a4a4a">'+obj_default[x].unidade_destino.toUpperCase()+'</span>';  
                             html += '</div>';
                             html += '<div class="content">';
-                           // html += '<b>Mais informações acessando:</b> <a target="_blank" rel="noopener noreferrer" href="'+dt.link_processo+'">'+dt.link_processo+ "</a>";  
                             html += '</div>';
                             html += '</div>';
                             html += '</li>'; 
@@ -394,7 +370,6 @@ function renderProcess(res) {
 }
 
 $(document).on("click", ".clickOldProcess", function(e){
-    //console.log("clickou")
     const aux = document.getElementById("select_auxilio");
     const camp = document.getElementById("select_campus");
     if(aux.value == 0 || aux.value == null || typeof aux.value == "undefined"){
@@ -403,7 +378,6 @@ $(document).on("click", ".clickOldProcess", function(e){
         setTimeout(function(){
             aux.classList.remove("uk-form-danger"); 
         },3000);
-        //UIkit.notification({ message: 'Necessário selecionar o auxílio para consultar.', status: 'danger' });
         Swal.fire({
             position: 'top',
             icon: 'warning',
@@ -417,7 +391,6 @@ $(document).on("click", ".clickOldProcess", function(e){
         setTimeout(function(){
             camp.classList.remove("uk-form-danger"); 
         },3000);
-        //UIkit.notification({ message: 'Necessário selecionar o campus para consultar.', status: 'danger' });
         Swal.fire({
             position: 'top',
             icon: 'warning',
@@ -443,7 +416,6 @@ function saveLast(dt){
 
 function errorGetProcess(_status) {
     closeLoader();
-    //document.getElementById("idSpinnSend").style.display = "none";
     document.getElementById("idBtnSend").style.display = "";
     Swal.fire({
         icon: 'error',
@@ -455,7 +427,6 @@ function errorGetProcess(_status) {
 
 function renderProcessOld(res){
     var resPars = JSON.parse(res);
-    //console.log(resPars);
     var dt = resPars.response.body;
     var html = "";
     if (dt == "" || typeof dt == "undefined" || dt == null ) {
@@ -468,7 +439,7 @@ function renderProcessOld(res){
         status = "<span style='color:green'><strong>FINALIZADO</strong></span>";   
         html += '<li class="timeline-milestone is-completed timeline-start">'; 
         var title = dt.tipo_processo.split("_").join(' ');
-        html += '<div class="timeline-action" style="border-top: 3px solid #5f338a;">';
+        html += '<div class="timeline-action">';
         html += '<h2 class="title"><b>' + title.toUpperCase() + '</b></span></h2>';
         html += '<span><b style="font-size: 16px;">Campus: </b> ' + dt.campus  + '</span>';
         html += '<span class="date"><b>Status:</b> ' + status  + '</span>';
